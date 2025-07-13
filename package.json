@@ -1,0 +1,31 @@
+{
+    "name": "gifted-api",
+    "version": "1.0.0",
+    "description": "WhatsApp API using gifted-baileys and Express",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "keywords": [
+        "whatsapp",
+        "gifted-md",
+        "express",
+        "api",
+        "baileys"
+    ],
+    "author": "Gifted Devs",
+    "license": "MIT",
+    "dependencies": {
+        "dotenv": "^16.3.1",
+        "express": "^4.18.4",
+        "file-type": "^20.4.1",
+        "gifted-api": "file:",
+        "gifted-baileys": "^1.5.6",
+        "axios": "*",
+        "fs": "*",
+        "zlib": "*",
+        "pino": "^8.0.0",
+        "qrcode": "*",
+        "qrcode-terminal": "^0.12.0"
+    }
+}

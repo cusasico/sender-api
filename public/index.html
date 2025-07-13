@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gifted WhatsApp API Documentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #a29bfe;
+            --text: #2d3436;
+            --bg: #f9f9f9;
+            --card-bg: #ffffff;
+            --border: #dfe6e9;
+            --shadow: rgba(149, 157, 165, 0.2);
+            --success: #00b894;
+            --warning: #fdcb6e;
+            --error: #d63031;
+            --code-bg: #282c34;
+            --modal-bg: rgba(0, 0, 0, 0.5);
+        }
+
+        .dark-mode {
+            --primary: #a29bfe;
+            --secondary: #6c5ce7;
+            --text: #f9f9f9;
+            --bg: #1a1a1a;
+            --card-bg: #2d3436;
+            --border: #636e72;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --code-bg: #1e1e1e;
+            --modal-bg: rgba(0, 0, 0, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            animation: fadeIn 1s ease;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .theme-toggle, .playground-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            box-shadow: 0 4px 6px var(--shadow);
+        }
+
+        .theme-toggle:hover, .playground-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin: 2rem 0 1rem;
+            color: var(--primary);
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 50%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), transparent);
+            border-radius: 3px;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 20px var(--shadow);
+            border: 1px solid var(--border);
+            animation: slideUp 0.5s ease;
+        }
+
+        .endpoint {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--code-bg);
+            border-radius: 8px;
+            color: white;
+            font-family: monospace;
+        }
+
+        .method {
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            margin-right: 1rem;
+            font-weight: bold;
+            background: var(--primary);
+        }
+
+        .url {
+            word-break: break-all;
+        }
+
+        .params-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        .params-table th, .params-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .params-table th {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .params-table tr:nth-child(even) {
+            background-color: rgba(108, 92, 231, 0.1);
+        }
+
+        .example-container {
+            margin: 2rem 0;
+        }
+
+        pre {
+            background: var(--code-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: -1px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .tab {
+            padding: 0.8rem 1.5rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            margin-right: 0.5rem;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background: var(--code-bg);
+            color: white;
+            border-color: var(--code-bg);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .response {
+            margin-top: 1.5rem;
+        }
+
+        .response pre {
+            background: rgba(0, 184, 148, 0.1);
+            border-left: 4px solid var(--success);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        .badge.get {
+            background: #61affe;
+            color: #1a2a3a;
+        }
+
+        .badge.post {
+            background: #49cc90;
+            color: #1a2a3a;
+        }
+
+        .badge.required {
+            background: #f93e3e;
+            color: white;
+        }
+
+        .badge.optional {
+            background: #fca130;
+            color: white;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(108, 92, 231, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(108, 92, 231, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(108, 92, 231, 0); }
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem 0;
+            border-top: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--modal-bg);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            margin: 2rem auto;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            background-color: var(--bg);
+            color: var(--text);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        .message-type-selector {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .message-type-btn {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            border: 2px solid var(--border);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .message-type-btn.active {
+            border-color: var(--primary);
+            background-color: rgba(108, 92, 231, 0.1);
+        }
+
+        .response-container {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 5px;
+            background-color: rgba(0, 184, 148, 0.1);
+            border-left: 4px solid var(--success);
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary);
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .endpoint {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .method {
+                margin-bottom: 0.5rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .params-table th, .params-table td {
+                padding: 0.75rem;
+                font-size: 0.9rem;
+            }
+
+            .modal-content {
+                padding: 1.5rem;
+                width: 95%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .message-type-selector {
+                flex-direction: column;
+            }
+
+            .params-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div>
+                <h1>Gifted WhatsApp Instance API</h1>
+                <p>Powerful WhatsApp Messaging API for Developers. Can be Used for Services like Sending Auth Messages, OTPs, Documents, Files etc</p>
+            </div>
+            <div class="header-actions">
+                <button class="playground-btn" id="playgroundBtn">
+                    <span>🚀</span> <span>Playground</span>
+                </button>
+                <button class="theme-toggle" id="themeToggle">
+                    <span id="themeIcon">🌙</span> <span id="themeText">Dark Mode</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="card pulse">
+            <h2>API Endpoint</h2>
+            <div class="endpoint">
+                <span class="method">POST</span>
+                <span class="url">https://whatsapp.giftedtech.web.id/api/sendMessage.php</span>
+            </div>
+            <p>Send text and media messages through WhatsApp with this simple API endpoint.</p>
+        </div>
+
+        <div class="card">
+            <h2>Request Parameters</h2>
+            <table class="params-table">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Type</th>
+                        <th>Required</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>number</code></td>
+                        <td>String</td>
+                        <td><span class="badge required">Required</span></td>
+                        <td>Recipient's phone number with country code (e.g., "2547xxxxxxxx" or "2547xxxxxxxx@s.whatsapp.net"). Can be multiple numbers separated by comma(e.g., "2547xxxxxxxx,2547zzzzzzzz" or "2547xxxxxxxx@s.whatsapp.net,2547zzzzzz@s.whatsapp.net")</td>
+                    </tr>
+                    <tr>
+                        <td><code>message</code></td>
+                        <td>String</td>
+                        <td><span class="badge required">Required for text</span></td>
+                        <td>The text message to send (required when type is "text")</td>
+                    </tr>
+                    <tr>
+                        <td><code>type</code></td>
+                        <td>String</td>
+                        <td><span class="badge required">Required</span></td>
+                        <td>Type of message: "text" or "media"</td>
+                    </tr>
+                    <tr>
+                        <td><code>mediaUrl</code></td>
+                        <td>String</td>
+                        <td><span class="badge required">Required for media</span></td>
+                        <td>URL of the media file to send (required when type is "media")</td>
+                    </tr>
+                    <tr>
+                        <td><code>mediaType</code></td>
+                        <td>String</td>
+                        <td><span class="badge optional">Optional</span></td>
+                        <td>MIME type of the media (e.g., "image/jpeg", "video/mp4"). If not provided, will be detected automatically.</td>
+                    </tr>
+                    <tr>
+                        <td><code>filename</code></td>
+                        <td>String</td>
+                        <td><span class="badge optional">Optional</span></td>
+                        <td>Filename for the media. If not provided, will be generated automatically.</td>
+                    </tr>
+                    <tr>
+                        <td><code>caption</code></td>
+                        <td>String</td>
+                        <td><span class="badge optional">Optional</span></td>
+                        <td>Caption for media messages</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <h2>Examples</h2>
+            
+            <div class="tabs">
+                <div class="tab active" data-tab="node">Node.js</div>
+                <div class="tab" data-tab="curl">cURL</div>
+                <div class="tab" data-tab="python">Python</div>
+            </div>
+            
+            <div class="example-container">
+                <div class="tab-content active" id="node">
+                    <h3>Text Message</h3>
+                    <pre><code class="language-javascript">const axios = require('axios');
+
+const payload = {
+    number: "2547xxxxxxxx",
+    // number: "2547zzzzzzz,2547yyyyyyy,2547wwwwwww",
+    message: "Hello from Gifted WhatsApp API!",
+    type: "text"
+};
+
+axios.post('https://whatsapp.giftedtech.web.id/api/sendMessage.php', payload)
+    .then(response => {
+        console.log('Message sent:', response.data);
+    })
+    .catch(error => {
+        console.error('Error:', error.response?.data || error.message);
+    });</code></pre>
+                    
+                    <h3>Media Message</h3>
+                    <pre><code class="language-javascript">const axios = require('axios');
+
+const payload = {
+    number: "2547xxxxxxxx",
+    // number: "2547zzzzzzz,2547yyyyyyy,2547wwwwwww",
+    type: "media",
+    mediaUrl: "https://example.com/image.jpg",
+    mediaType: "image/jpeg",
+    filename: "Image.jpg",
+    caption: "Check out this image!"
+};
+
+axios.post('https://whatsapp.giftedtech.web.id/api/sendMessage.php', payload)
+    .then(response => {
+        console.log('Media sent:', response.data);
+    })
+    .catch(error => {
+        console.error('Error:', error.response?.data || error.message);
+    });</code></pre>
+                </div>
+                
+                <div class="tab-content" id="curl">
+                    <h3>Text Message</h3>
+                    <pre><code class="language-bash">curl -X POST \
+  https://whatsapp.giftedtech.web.id/api/sendMessage.php \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "number": "2547xxxxxxxx",
+    "message": "Hello from Gifted Whatsapp Instance API!",
+    "type": "text"
+}'</code></pre>
+                    
+                    <h3>Media Message</h3>
+                    <pre><code class="language-bash">curl -X POST \
+  https://whatsapp.giftedtech.web.id/api/sendMessage.php \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "number": "2547xxxxxxxx",
+    "type": "media",
+    "mediaUrl": "https://example.com/image.jpg",
+    "mediaType": "image/jpeg",
+    "filename": "Image.jpg"
+    "caption": "Image sent via Gifted Whatsapp Instance API"
+}'</code></pre>
+                </div>
+                
+                <div class="tab-content" id="python">
+                    <h3>Text Message</h3>
+                    <pre><code class="language-python">import requests
+
+payload = {
+    "number": "2547xxxxxxxx",
+    # "number": "2547xxxxxxxx,2547yyyyyyy,2547wwwwwww",
+    "message": "Hello from Gifted Whatsapp Instance API!",
+    "type": "text"
+}
+
+response = requests.post(
+    "https://whatsapp.giftedtech.web.id/api/sendMessage.php",
+    json=payload
+)
+
+print(response.json())</code></pre>
+                    
+                    <h3>Media Message</h3>
+                    <pre><code class="language-python">import requests
+
+payload = {
+    "number": "2547xxxxxxxx",
+    # "number": "2547xxxxxxxx,2547yyyyyyy,2547wwwwwww",
+    "type": "media",
+    "mediaUrl": "https://example.com/video.mp4",
+    "mediaType": "video/mp4",
+    "filename": "Video.mp4",
+    "caption": "Video sent from Gifted Whatsapp Instance API"
+}
+
+response = requests.post(
+    "https://whatsapp.giftedtech.web.id/api/sendMessage.php",
+    json=payload
+)
+
+print(response.json())</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Response</h2>
+            <p>The API returns a JSON response with the following structure:</p>
+            
+            <div class="response">
+                <pre><code class="language-json">{
+    "status": "success",
+    "result": {
+        "key": {
+            "remoteJid": "2547xxxxxxxx@s.whatsapp.net",
+            "fromMe": true,
+            "id": "3EB0ABCD00000000"
+        },
+        "message": {
+            "conversation": "Hello from Gifted WhatsApp Instance API!"
+        },
+        "messageTimestamp": "1678901234",
+        "status": "PENDING"
+    }
+}</code></pre>
+            </div>
+            
+            <p>Error responses will have the following structure:</p>
+            
+            <div class="response">
+                <pre><code class="language-json">{
+    "status": "error",
+    "error": "Detailed error message"
+}</code></pre>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Test Cases</h2>
+            <p>Here's a complete test script you can use to verify all functionality:</p>
+            
+            <pre><code class="language-javascript">const axios = require('axios');
+const API_BASE_URL = 'https://whatsapp.giftedtech.web.id';
+
+axios.defaults.headers.common['Content-Type'] = 'application/json';
+
+const testNumber = '2547xxxxxxxx';
+// OR CAN BE
+// const testNumber = '2547xxxxxxxx,2547zzzzzzz,2547yyyyyyyy';
+
+// Test Text Message
+async function testTextMessage() {
+  const payload = {
+    number: testNumber,
+    message: 'Hello, This is a test message',
+    type: 'text'
+  };
+
+  try {
+    const response = await axios.post(`${API_BASE_URL}/api/sendMessage.php`, payload);
+    console.log('✅ Text message sent successfully');
+    return true;
+  } catch (error) {
+    console.error('❌ Text message failed:', error.response?.data || error.message);
+    return false;
+  }
+}
+
+// Test Media Message
+async function testMediaMessage({ mediaUrl, mediaType, filename, caption }) {
+  const payload = {
+    number: testNumber,
+    type: 'media',
+    mediaUrl,
+    mediaType,
+    filename,
+    caption
+  };
+
+  try {
+    const response = await axios.post(`${API_BASE_URL}/api/sendMessage.php`, payload);
+    console.log(`✅ ${mediaType} message sent successfully`);
+    return true;
+  } catch (error) {
+    console.error(`❌ ${mediaType} message failed:`, error.response?.data || error.message);
+    return false;
+  }
+}
+
+async function runTests() {
+  console.log('🚀 Starting tests...');
+
+  const tests = [
+    testTextMessage(),
+    testMediaMessage({
+      mediaUrl: 'https://files.giftedtech.web.id/audio/L4prince-indah-weche-h-vTzxU7SmoE_www.grabtheclip.com.mp3',
+      mediaType: 'audio/mpeg',
+      filename: 'Weche Singo.mp3',
+      caption: '🎵 Audio test'
+    }),
+    testMediaMessage({
+      mediaUrl: 'https://cdn.giftedtech.web.id/file/alan-walker-the-spectre-720-ytshorts.savetube.me.mp4',
+      mediaType: 'video/mp4',
+      filename: 'Spectre.mp4',
+      caption: '🎬 Video test'
+    }),
+    testMediaMessage({
+      mediaUrl: 'https://files.giftedtech.web.id/file/gifted-md.jpg',
+      mediaType: 'image/jpeg',
+      filename: 'image.jpg',
+      caption: '🖼️ Image test'
+    })
+  ];
+
+  const results = await Promise.all(tests);
+  console.log('\nTest Summary:');
+  results.forEach((res, i) => console.log(`Test ${i + 1}: ${res ? '✅ PASSED' : '❌ FAILED'}`));
+}
+
+runTests();</code></pre>
+        </div>
+
+        <footer>
+            <p>© 2025 Gifted Tech. All Rights Reserved.</p>
+            <p>API Version: 1.0.0</p>
+        </footer>
+    </div>
+
+    <div class="modal" id="playgroundModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">API Playground</h3>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            
+            <div class="message-type-selector">
+                <div class="message-type-btn active" data-type="text">Text Message</div>
+                <div class="message-type-btn" data-type="media">Media Message</div>
+            </div>
+            
+            <form id="apiForm">
+                <input type="hidden" id="messageType" name="type" value="text">
+                
+                <div class="form-group">
+                    <label for="number">Phone Number(s) (with country code)</label>
+                    <input type="text" id="number" name="number" class="form-control" value="2547xxxxxxxx" required>
+                </div>
+                
+                <div id="textFields">
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" class="form-control" rows="4" required>Hello, This is a Test Message sent from Gifted Whatsapp Instance API</textarea>
+                    </div>
+                </div>
+                
+                <div id="mediaFields" style="display: none;">
+                    <div class="form-group">
+                        <label for="mediaUrl">Media URL</label>
+                        <input type="url" id="mediaUrl" name="mediaUrl" class="form-control" value="https://files.giftedtech.web.id/audio/L4prince-indah-weche-h-vTzxU7SmoE_www.grabtheclip.com.mp3" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="mediaType">Media Type</label>
+                        <input type="text" id="mediaType" name="mediaType" class="form-control" placeholder="e.g., audio/mpeg image/jpeg, video/mp4">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="filename">Filename (with or without extension)</label>
+                        <input type="text" id="filename" name="filename" class="form-control" placeholder="e.g., Audio.mp3, Image.jpg, Video.mp4">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="caption">Caption</label>
+                        <textarea id="caption" name="caption" class="form-control" rows="3">Accept this File Test</textarea>
+                    </div>
+                </div>
+                
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Sending Message...</p>
+                </div>
+                
+                <div class="response-container" id="responseContainer">
+                    <pre id="responseText"></pre>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block">Send Message</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+        
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+            document.body.classList.add('dark-mode');
+            themeIcon.textContent = '☀️';
+            themeText.textContent = 'Light Mode';
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            themeIcon.textContent = isDark ? '☀️' : '🌙';
+            themeText.textContent = isDark ? 'Light Mode' : 'Dark Mode';
+        });
+        
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
+        });
+        
+        document.querySelectorAll('pre').forEach(pre => {
+            const button = document.createElement('button');
+            button.className = 'copy-btn';
+            button.textContent = 'Copy';
+            button.addEventListener('click', () => {
+                const code = pre.querySelector('code').textContent;
+                navigator.clipboard.writeText(code).then(() => {
+                    button.textContent = 'Copied!';
+                    setTimeout(() => {
+                        button.textContent = 'Copy';
+                    }, 2000);
+                });
+            });
+            pre.appendChild(button);
+        });
+        
+        hljs.highlightAll();
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        document.querySelectorAll('.card').forEach(card => {
+            observer.observe(card);
+        });
+
+        const playgroundBtn = document.getElementById('playgroundBtn');
+        const playgroundModal = document.getElementById('playgroundModal');
+        const closeModal = document.getElementById('closeModal');
+        const messageTypeBtns = document.querySelectorAll('.message-type-btn');
+        const messageTypeInput = document.getElementById('messageType');
+        const textFields = document.getElementById('textFields');
+        const mediaFields = document.getElementById('mediaFields');
+        const apiForm = document.getElementById('apiForm');
+        const loading = document.getElementById('loading');
+        const responseContainer = document.getElementById('responseContainer');
+        const responseText = document.getElementById('responseText');
+
+        playgroundBtn.addEventListener('click', () => {
+            playgroundModal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        });
+
+        closeModal.addEventListener('click', () => {
+            playgroundModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === playgroundModal) {
+                playgroundModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        messageTypeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                messageTypeBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const type = btn.dataset.type;
+                messageTypeInput.value = type;
+                
+                if (type === 'text') {
+                    textFields.style.display = 'block';
+                    mediaFields.style.display = 'none';
+                } else {
+                    textFields.style.display = 'none';
+                    mediaFields.style.display = 'block';
+                }
+            });
+        });
+
+        apiForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(apiForm);
+            const payload = {};
+            formData.forEach((value, key) => {
+                payload[key] = value;
+            });
+            
+            loading.style.display = 'block';
+            responseContainer.style.display = 'none';
+            
+            try {
+                const response = await fetch('/api/sendMessage.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await response.json();
+                
+                responseText.textContent = JSON.stringify(data, null, 2);
+                responseContainer.style.display = 'block';
+                
+                hljs.highlightElement(responseText);
+                
+            } catch (error) {
+                responseText.textContent = JSON.stringify({
+                    status: 'error',
+                    error: error.message
+                }, null, 2);
+                responseContainer.style.display = 'block';
+                hljs.highlightElement(responseText);
+            } finally {
+                loading.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
