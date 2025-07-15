@@ -33,6 +33,9 @@ const MAX_RECONNECT_ATTEMPTS = 10;
 const RECONNECT_INTERVAL = 30000;
 const CONNECTION_TIMEOUT = 60000;
 
+// Track if connection message has been sent
+let connectionMessageSent = false;
+
 // Declare Gifted as a global variable
 global.Gifted = null;
 
@@ -63,6 +66,7 @@ async function startGifted() {
     if (isConnecting) return;
     isConnecting = true;
     clearConnectionTimers();
+    connectionMessageSent = false; // Reset connection message flag on new connection attempt
 
     try {
         console.log('⏱️ Connecting Gifted MD...');
@@ -136,6 +140,7 @@ async function startGifted() {
             if (qr) {
                 console.log('🔑 QR Code Generated - Scan to Connect');
                 clearTimeout(connectionTimeout);
+                connectionMessageSent = false; // Reset when new QR is generated
             }
 
             if (connection === 'close') {
@@ -143,6 +148,7 @@ async function startGifted() {
                     (lastDisconnect?.error)?.output?.statusCode !== DisconnectReason.loggedOut;
                 
                 console.log('🔌 Connection Closed. Reconnecting...', shouldReconnect);
+                connectionMessageSent = false; // Reset on connection close
                 
                 if (shouldReconnect) {
                     handleReconnection();
@@ -154,7 +160,12 @@ async function startGifted() {
                 console.log('✅ Connected to WhatsApp');
                 clearConnectionTimers();
                 reconnectAttempts = 0;
-                sendConnectionMessage();
+                
+                // Only send connection message if it hasn't been sent yet
+                if (!connectionMessageSent) {
+                    sendConnectionMessage();
+                    connectionMessageSent = true;
+                }
             }
         });
 
@@ -173,7 +184,7 @@ async function sendConnectionMessage() {
     const startMess = {
         image: { url: thumbnail },
         caption: `
-*WHATSAPP INSTACE IS ONLINE*
+*WHATSAPP INSTANCE IS ONLINE*
 
 > *Settings:*
 Mode                      : *${config.MODE}*
@@ -230,113 +241,115 @@ app.post('/api/sendMessage.php', async (req, res) => {
             const jid = num.includes('@s.whatsapp.net') ? num : num + '@s.whatsapp.net';
             
             try {
-                 if (type === 'code') {
-                   let msg = generateWAMessageFromContent(jid, {
-            viewOnceMessage: {
-                message: {
-                    messageContextInfo: {
-                        deviceListMetadata: {},
-                        deviceListMetadataVersion: 2
-                    },
-                    interactiveMessage: proto.Message.InteractiveMessage.create({
-                        body: proto.Message.InteractiveMessage.Body.create({
-                            text: message
-                        }),
-                        footer: proto.Message.InteractiveMessage.Footer.create({
-                            text: `> Powered By Gifted Tech`
-                        }),
-                        header: proto.Message.InteractiveMessage.Header.create({
-                            ...(await prepareWAMessageMedia({
-                                image: {
-                                    url: "https://files.giftedtech.web.id/file/gifted-md.jpg"
-                                }
-                            }, {
-                                upload: Gifted.waUploadToServer
-                            })),
-                            title: '',
-                            subtitle: '',
-                            hasMediaAttachment: true 
-                        }),
-                        nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
-                            buttons: [
-                                {
-                               name: "cta_copy",
-                               buttonParamsJson: JSON.stringify({
-                                     display_text: "Copy Code",
-                                     id: "copy_code",
-                                     copy_code: code
-                                 })
+                if (type === 'code') {
+                    const msg = generateWAMessageFromContent(jid, {
+                        viewOnceMessage: {
+                            message: {
+                                messageContextInfo: {
+                                    deviceListMetadata: {},
+                                    deviceListMetadataVersion: 2
                                 },
-                                {
-                                name: "cta_url",
-                                buttonParamsJson: JSON.stringify({
-                                    display_text: "Follow Channel",
-                                    url: "https://whatsapp.com/channel/0029Vb3hlgX5kg7G0nFggl0Y"
+                                interactiveMessage: proto.Message.InteractiveMessage.create({
+                                    body: proto.Message.InteractiveMessage.Body.create({
+                                        text: message
+                                    }),
+                                    footer: proto.Message.InteractiveMessage.Footer.create({
+                                        text: `> Powered By Gifted Tech`
+                                    }),
+                                    header: proto.Message.InteractiveMessage.Header.create({
+                                        ...(await prepareWAMessageMedia({
+                                            image: {
+                                                url: "https://files.giftedtech.web.id/file/gifted-md.jpg"
+                                            }
+                                        }, {
+                                            upload: Gifted.waUploadToServer
+                                        })),
+                                        title: '',
+                                        subtitle: '',
+                                        hasMediaAttachment: true 
+                                    }),
+                                    nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+                                        buttons: [
+                                            {
+                                                name: "cta_copy",
+                                                buttonParamsJson: JSON.stringify({
+                                                    display_text: "Copy Code",
+                                                    id: "copy_code",
+                                                    copy_code: code
+                                                })
+                                            },
+                                            {
+                                                name: "cta_url",
+                                                buttonParamsJson: JSON.stringify({
+                                                    display_text: "Follow Channel",
+                                                    url: "https://whatsapp.com/channel/0029Vb3hlgX5kg7G0nFggl0Y"
+                                                })
+                                            }
+                                        ]
+                                    })
                                 })
-                            }]
-                        })
-                    })
-                }
-            }
-        }, {});
+                            }
+                        }
+                    }, {});
 
-        await global.Gifted.relayMessage(msg.key.remoteJid, msg.message, {
-            messageId: msg.key.id
-        });
-                    results.push({ jid, status: 'success', result });
+                    await global.Gifted.relayMessage(msg.key.remoteJid, msg.message, {
+                        messageId: msg.key.id
+                    });
+                    results.push({ jid, status: 'success' });
                 } else if (type === 'text') {
-                    let msg = generateWAMessageFromContent(jid, {
-            viewOnceMessage: {
-                message: {
-                    messageContextInfo: {
-                        deviceListMetadata: {},
-                        deviceListMetadataVersion: 2
-                    },
-                    interactiveMessage: proto.Message.InteractiveMessage.create({
-                        body: proto.Message.InteractiveMessage.Body.create({
-                            text: message
-                        }),
-                        footer: proto.Message.InteractiveMessage.Footer.create({
-                            text: `> Powered By Gifted Tech`
-                        }),
-                        header: proto.Message.InteractiveMessage.Header.create({
-                            ...(await prepareWAMessageMedia({
-                                image: {
-                                    url: "https://files.giftedtech.web.id/file/gifted-md.jpg"
-                                }
-                            }, {
-                                upload: Gifted.waUploadToServer
-                            })),
-                            title: '',
-                            subtitle: '',
-                            hasMediaAttachment: true 
-                        }),
-                        nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
-                            buttons: [
-                                {
-                                name: "cta_url",
-                                buttonParamsJson: JSON.stringify({
-                                    display_text: "Follow Channel",
-                                    url: "https://whatsapp.com/channel/0029Vb3hlgX5kg7G0nFggl0Y"
+                    const msg = generateWAMessageFromContent(jid, {
+                        viewOnceMessage: {
+                            message: {
+                                messageContextInfo: {
+                                    deviceListMetadata: {},
+                                    deviceListMetadataVersion: 2
+                                },
+                                interactiveMessage: proto.Message.InteractiveMessage.create({
+                                    body: proto.Message.InteractiveMessage.Body.create({
+                                        text: message
+                                    }),
+                                    footer: proto.Message.InteractiveMessage.Footer.create({
+                                        text: `> Powered By Gifted Tech`
+                                    }),
+                                    header: proto.Message.InteractiveMessage.Header.create({
+                                        ...(await prepareWAMessageMedia({
+                                            image: {
+                                                url: "https://files.giftedtech.web.id/file/gifted-md.jpg"
+                                            }
+                                        }, {
+                                            upload: Gifted.waUploadToServer
+                                        })),
+                                        title: '',
+                                        subtitle: '',
+                                        hasMediaAttachment: true 
+                                    }),
+                                    nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+                                        buttons: [
+                                            {
+                                                name: "cta_url",
+                                                buttonParamsJson: JSON.stringify({
+                                                    display_text: "Follow Channel",
+                                                    url: "https://whatsapp.com/channel/0029Vb3hlgX5kg7G0nFggl0Y"
+                                                })
+                                            }
+                                        ]
+                                    })
                                 })
-                            }]
-                        })
-                    })
-                }
-            }
-        }, {});
+                            }
+                        }
+                    }, {});
 
-        await global.Gifted.relayMessage(msg.key.remoteJid, msg.message, {
-            messageId: msg.key.id
-        });
-                    results.push({ jid, status: 'success', result });
+                    await global.Gifted.relayMessage(msg.key.remoteJid, msg.message, {
+                        messageId: msg.key.id
+                    });
+                    results.push({ jid, status: 'success' });
                 } else if (type === 'media') {
                     if (!mediaUrl) {
                         results.push({ jid, status: 'error', error: 'Media URL is Required' });
                         continue;
                     }
-                    const result = await handleMediaMessage({ mediaUrl, mediaType, filename, caption }, jid);
-                    results.push({ jid, status: 'success', result });
+                    await handleMediaMessage({ mediaUrl, mediaType, filename, caption }, jid);
+                    results.push({ jid, status: 'success' });
                 } else {
                     results.push({ jid, status: 'error', error: 'Invalid Message Type' });
                 }
@@ -358,7 +371,7 @@ app.post('/api/sendMessage.php', async (req, res) => {
                 success: 'false',
                 creator: 'GiftedTech',
                 error: 'All Messages Failed', 
-                result: results
+                results
             });
         }
 
@@ -366,10 +379,10 @@ app.post('/api/sendMessage.php', async (req, res) => {
         if (anyFailed) {
             return res.status(207).json({
                 status: 207, 
-                success: 'partimal_success',
+                success: 'partial_success',
                 creator: 'GiftedTech',
                 message: 'Some Messages Failed',
-                result: results
+                results
             });
         }
 
@@ -378,7 +391,7 @@ app.post('/api/sendMessage.php', async (req, res) => {
             success: 'true',
             creator: 'GiftedTech',
             message: 'Message Sent Successfully',
-            result: results
+            results
         });
 
     } catch (error) {
