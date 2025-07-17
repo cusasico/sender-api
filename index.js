@@ -251,7 +251,7 @@ app.post('/api/sendMessage.php', async (req, res) => {
                                 },
                                 interactiveMessage: proto.Message.InteractiveMessage.create({
                                     body: proto.Message.InteractiveMessage.Body.create({
-                                        text: `Hello ${username},\nThank you for signing up. To complete your registration, please copy your verification code\n`
+                                        text: `Hello *${username},*\nThank you for signing up. To complete your registration, please copy your verification code.\nThe code will expire in *10 minutes.*\nIf you didn't request this signup, please ignore this message or contact our support team.\n`
                                     }),
                                     footer: proto.Message.InteractiveMessage.Footer.create({
                                         text: `> Powered By Gifted Tech`
@@ -306,7 +306,7 @@ app.post('/api/sendMessage.php', async (req, res) => {
                                 },
                                 interactiveMessage: proto.Message.InteractiveMessage.create({
                                     body: proto.Message.InteractiveMessage.Body.create({
-                                        text: message
+                                        text: `Hello *${username},*\nWe have received a request to reset your account password, please copy your verification code.\n⚠️ If you didn't request this password reset, please secure your account immediately as someone else may be trying to access it.\nThe code will expire in *10 minutes.*\n> *Security Tip:* Never share your verification code with anyone\n`
                                     }),
                                     footer: proto.Message.InteractiveMessage.Footer.create({
                                         text: `> Powered By Gifted Tech`
@@ -361,7 +361,7 @@ app.post('/api/sendMessage.php', async (req, res) => {
                                 },
                                 interactiveMessage: proto.Message.InteractiveMessage.create({
                                     body: proto.Message.InteractiveMessage.Body.create({
-                                        text: message
+                                        text: `Hello *${username},*\nWe've received a request to resend a new verification code, please copy your verification code.\nThe code will expire in *10 minutes.*\n> *Security Tip:* Never share your verification code with anyone\n`
                                     }),
                                     footer: proto.Message.InteractiveMessage.Footer.create({
                                         text: `> Powered By Gifted Tech`
@@ -416,7 +416,7 @@ app.post('/api/sendMessage.php', async (req, res) => {
                                 },
                                 interactiveMessage: proto.Message.InteractiveMessage.create({
                                     body: proto.Message.InteractiveMessage.Body.create({
-                                        text: message
+                                        text: `Hello *${username},*\nWe received a request to permanently delete your account.\nPlease review the following information carefully:\n> *⚠️ Important:*\nThis action will immediately and permanently:\n- Delete all your account data\n- Remove your access to all services\n- Cancel any active subscriptions\n\nThis action cannot be undone\n\nTo confirm this deletion, please copy your verification code.\nThe code will expire in *10 minutes.*\n> *Security Tip:* Never share your verification code with anyone\n`
                                     }),
                                     footer: proto.Message.InteractiveMessage.Footer.create({
                                         text: `> Powered By Gifted Tech`
