@@ -222,7 +222,7 @@ app.post('/api/sendMessage.php', async (req, res) => {
         });
     }
 
-    const { number, message, code, type, mediaUrl, mediaType, filename, caption } = req.body;
+    const { number, message, username, code, type, mediaUrl, mediaType, filename, caption } = req.body;
     
     if (!number || !message) {
         return res.status(400).json({ 
@@ -241,7 +241,62 @@ app.post('/api/sendMessage.php', async (req, res) => {
             const jid = num.includes('@s.whatsapp.net') ? num : num + '@s.whatsapp.net';
             
             try {
-                if (type === 'code') {
+                if (type === 'sendSignupCode') {
+                    const msg = generateWAMessageFromContent(jid, {
+                        viewOnceMessage: {
+                            message: {
+                                messageContextInfo: {
+                                    deviceListMetadata: {},
+                                    deviceListMetadataVersion: 2
+                                },
+                                interactiveMessage: proto.Message.InteractiveMessage.create({
+                                    body: proto.Message.InteractiveMessage.Body.create({
+                                        text: `Hello ${username},\nThank you for signing up. To complete your registration, please copy your verification code\n`
+                                    }),
+                                    footer: proto.Message.InteractiveMessage.Footer.create({
+                                        text: `> Powered By Gifted Tech`
+                                    }),
+                                    header: proto.Message.InteractiveMessage.Header.create({
+                                        ...(await prepareWAMessageMedia({
+                                            image: {
+                                                url: "https://files.giftedtech.web.id/image/hwOverif-code.jpg"
+                                            }
+                                        }, {
+                                            upload: Gifted.waUploadToServer
+                                        })),
+                                        title: '',
+                                        subtitle: '',
+                                        hasMediaAttachment: true 
+                                    }),
+                                    nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+                                        buttons: [
+                                            {
+                                                name: "cta_copy",
+                                                buttonParamsJson: JSON.stringify({
+                                                    display_text: "Copy Code",
+                                                    id: "copy_code",
+                                                    copy_code: code
+                                                })
+                                            },
+                                            {
+                                                name: "cta_url",
+                                                buttonParamsJson: JSON.stringify({
+                                                    display_text: "Follow Channel",
+                                                    url: "https://whatsapp.com/channel/0029Vb3hlgX5kg7G0nFggl0Y"
+                                                })
+                                            }
+                                        ]
+                                    })
+                                })
+                            }
+                        }
+                    }, {});
+
+                    await global.Gifted.relayMessage(msg.key.remoteJid, msg.message, {
+                        messageId: msg.key.id
+                    });
+                    results.push({ jid, status: 'success' });
+                } else if (type === 'sendResetCode') {
                     const msg = generateWAMessageFromContent(jid, {
                         viewOnceMessage: {
                             message: {
@@ -259,7 +314,117 @@ app.post('/api/sendMessage.php', async (req, res) => {
                                     header: proto.Message.InteractiveMessage.Header.create({
                                         ...(await prepareWAMessageMedia({
                                             image: {
-                                                url: "https://files.giftedtech.web.id/file/gifted-md.jpg"
+                                                url: "https://files.giftedtech.web.id/image/hwOverif-code.jpg"
+                                            }
+                                        }, {
+                                            upload: Gifted.waUploadToServer
+                                        })),
+                                        title: '',
+                                        subtitle: '',
+                                        hasMediaAttachment: true 
+                                    }),
+                                    nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+                                        buttons: [
+                                            {
+                                                name: "cta_copy",
+                                                buttonParamsJson: JSON.stringify({
+                                                    display_text: "Copy Code",
+                                                    id: "copy_code",
+                                                    copy_code: code
+                                                })
+                                            },
+                                            {
+                                                name: "cta_url",
+                                                buttonParamsJson: JSON.stringify({
+                                                    display_text: "Follow Channel",
+                                                    url: "https://whatsapp.com/channel/0029Vb3hlgX5kg7G0nFggl0Y"
+                                                })
+                                            }
+                                        ]
+                                    })
+                                })
+                            }
+                        }
+                    }, {});
+
+                    await global.Gifted.relayMessage(msg.key.remoteJid, msg.message, {
+                        messageId: msg.key.id
+                    });
+                    results.push({ jid, status: 'success' });
+                  } else if (type === 'sendResendCode') {
+                    const msg = generateWAMessageFromContent(jid, {
+                        viewOnceMessage: {
+                            message: {
+                                messageContextInfo: {
+                                    deviceListMetadata: {},
+                                    deviceListMetadataVersion: 2
+                                },
+                                interactiveMessage: proto.Message.InteractiveMessage.create({
+                                    body: proto.Message.InteractiveMessage.Body.create({
+                                        text: message
+                                    }),
+                                    footer: proto.Message.InteractiveMessage.Footer.create({
+                                        text: `> Powered By Gifted Tech`
+                                    }),
+                                    header: proto.Message.InteractiveMessage.Header.create({
+                                        ...(await prepareWAMessageMedia({
+                                            image: {
+                                                url: "https://files.giftedtech.web.id/image/hwOverif-code.jpg"
+                                            }
+                                        }, {
+                                            upload: Gifted.waUploadToServer
+                                        })),
+                                        title: '',
+                                        subtitle: '',
+                                        hasMediaAttachment: true 
+                                    }),
+                                    nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+                                        buttons: [
+                                            {
+                                                name: "cta_copy",
+                                                buttonParamsJson: JSON.stringify({
+                                                    display_text: "Copy Code",
+                                                    id: "copy_code",
+                                                    copy_code: code
+                                                })
+                                            },
+                                            {
+                                                name: "cta_url",
+                                                buttonParamsJson: JSON.stringify({
+                                                    display_text: "Follow Channel",
+                                                    url: "https://whatsapp.com/channel/0029Vb3hlgX5kg7G0nFggl0Y"
+                                                })
+                                            }
+                                        ]
+                                    })
+                                })
+                            }
+                        }
+                    }, {});
+
+                    await global.Gifted.relayMessage(msg.key.remoteJid, msg.message, {
+                        messageId: msg.key.id
+                    });
+                    results.push({ jid, status: 'success' });
+                } else if (type === 'sendDeleteCode') {
+                    const msg = generateWAMessageFromContent(jid, {
+                        viewOnceMessage: {
+                            message: {
+                                messageContextInfo: {
+                                    deviceListMetadata: {},
+                                    deviceListMetadataVersion: 2
+                                },
+                                interactiveMessage: proto.Message.InteractiveMessage.create({
+                                    body: proto.Message.InteractiveMessage.Body.create({
+                                        text: message
+                                    }),
+                                    footer: proto.Message.InteractiveMessage.Footer.create({
+                                        text: `> Powered By Gifted Tech`
+                                    }),
+                                    header: proto.Message.InteractiveMessage.Header.create({
+                                        ...(await prepareWAMessageMedia({
+                                            image: {
+                                                url: "https://files.giftedtech.web.id/image/hwOverif-code.jpg"
                                             }
                                         }, {
                                             upload: Gifted.waUploadToServer
