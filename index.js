@@ -2,7 +2,7 @@ const {
   default: giftedConnect,
   useMultiFileAuthState,
   DisconnectReason,
-  fetchLatestBaileysVersion,
+  fetchLatestWaWebVersion,
   Browsers,
   generateWAMessageFromContent, 
   proto, 
@@ -73,7 +73,7 @@ async function startGifted() {
 
     try {
         console.log('⏱️ Connecting Gifted MD...');
-        const { version, isLatest } = await fetchLatestBaileysVersion();
+        const { version, isLatest } = await fetchLatestWaWebVersion();
         const { state, saveCreds } = await useMultiFileAuthState(sessionDir);
 
         if (store) {
@@ -82,48 +82,53 @@ async function startGifted() {
         store = new CustomStore();
 
         const giftedSock = {
-            version,
-            logger: logger,
-            browser: ['GIFTED', "safari", "1.0.0"],
-            auth: {
-                creds: state.creds,
-                keys: makeCacheableSignalKeyStore(state.keys, logger)
-            },
-            getMessage: async (key) => {
-                if (store) {
-                    const msg = store.loadMessage(key.remoteJid, key.id);
-                    return msg?.message || undefined;
-                }
-                return { conversation: 'Error occurred' };
-            },
-            connectTimeoutMs: 60000,
-            defaultQueryTimeoutMs: 60000,
-            keepAliveIntervalMs: 10000,
-            markOnlineOnConnect: true,
-            syncFullHistory: false,
-            generateHighQualityLinkPreview: false,
-            patchMessageBeforeSending: (message) => {
-                const requiresPatch = !!(
-                    message.buttonsMessage ||
-                    message.templateMessage ||
-                    message.listMessage
-                );
-                if (requiresPatch) {
-                    message = {
-                        viewOnceMessage: {
-                            message: {
-                                messageContextInfo: {
-                                    deviceListMetadataVersion: 2,
-                                    deviceListMetadata: {},
-                                },
-                                ...message,
-                            },
+    version,
+    logger: logger,
+    browser: ['Ubuntu', 'Chrome', '22.04.4'],
+    auth: {
+        creds: state.creds,
+        keys: makeCacheableSignalKeyStore(state.keys, logger)
+    },
+    getMessage: async (key) => {
+        if (store) {
+            const msg = await store.loadMessage(key.remoteJid, key.id);
+            return msg?.message || undefined;
+        }
+        return { conversation: 'Error occurred' };
+    },
+    connectTimeoutMs: 20000,
+    defaultQueryTimeoutMs: 30000,
+    keepAliveIntervalMs: 25000,
+    fireInitQueries: true,
+    markOnlineOnConnect: true,
+    syncFullHistory: false,
+    shouldSyncHistoryMessage: () => false,
+    retryRequestDelayMs: 100,
+    maxMsgRetryCount: 3,
+    generateHighQualityLinkPreview: false,
+    emitOwnEvents: true,
+    patchMessageBeforeSending: (message) => {
+        const requiresPatch = !!(
+            message.buttonsMessage ||
+            message.templateMessage ||
+            message.listMessage
+        );
+        if (requiresPatch) {
+            message = {
+                viewOnceMessage: {
+                    message: {
+                        messageContextInfo: {
+                            deviceListMetadataVersion: 2,
+                            deviceListMetadata: {},
                         },
-                    };
-                }
-                return message;
-            }
-        };
+                        ...message,
+                    },
+                },
+            };
+        }
+        return message;
+    }
+};
 
         global.connectionTimeout = setTimeout(() => {
             if (!global.Gifted?.user) {
