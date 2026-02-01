@@ -6,9 +6,10 @@ const {
   Browsers,
   generateWAMessageFromContent, 
   proto, 
-  prepareWAMessageMedia,
+  normalizeMessageContent,
   makeCacheableSignalKeyStore
 } = require('gifted-baileys');
+const { sendButtons } = require('gifted-btns');
 
 const express = require('express'),
       fs = require('fs'),
@@ -244,271 +245,101 @@ app.post('/api/sendMessage.php', async (req, res) => {
             
             try {
                 if (type === 'sendSignupCode') {
-                    const msg = generateWAMessageFromContent(jid, {
-                        viewOnceMessage: {
-                            message: {
-                                messageContextInfo: {
-                                    deviceListMetadata: {},
-                                    deviceListMetadataVersion: 2
-                                },
-                                interactiveMessage: proto.Message.InteractiveMessage.create({
-                                    body: proto.Message.InteractiveMessage.Body.create({
-                                        text: `Hello *${username},*\nThank you for signing up. To complete your registration, please copy your verification code.\nThe code will expire in *10 minutes.*\nIf you didn't request this signup, please ignore this message or contact our support team.\n`
-                                    }),
-                                    footer: proto.Message.InteractiveMessage.Footer.create({
-                                        text: `> Powered By Gifted Tech`
-                                    }),
-                                    header: proto.Message.InteractiveMessage.Header.create({
-                                        ...(await prepareWAMessageMedia({
-                                            image: {
-                                                url: thumbnailUrl
-                                            }
-                                        }, {
-                                            upload: Gifted.waUploadToServer
-                                        })),
-                                        title: '',
-                                        subtitle: '',
-                                        hasMediaAttachment: true 
-                                    }),
-                                    nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
-                                        buttons: [
-                                            {
-                                                name: "cta_copy",
-                                                buttonParamsJson: JSON.stringify({
-                                                    display_text: "Copy Code",
-                                                    id: "copy_code",
-                                                    copy_code: code
-                                                })
-                                            },
-                                            {
-                                                name: "cta_url",
-                                                buttonParamsJson: JSON.stringify({
-                                                    display_text: "Follow Channel",
-                                                    url: newsletterUrl
-                                                })
-                                            }
-                                        ]
-                                    })
-                                })
-                            }
-                        }
-                    }, {});
-
-                    await global.Gifted.relayMessage(msg.key.remoteJid, msg.message, {
-                        messageId: msg.key.id
-                    });
+                  await sendButtons(global.Gifted, jid, {
+  title: '',            
+  text: `Hello *${username},*\nThank you for signing up. To complete your registration, please copy your verification code.\nThe code will expire in *10 minutes.*\nIf you didn't request this signup, please ignore this message or contact our support team.\n`,    
+  footer: `> *${botFooter}*`,            
+  buttons: [ 
+    { name: 'cta_copy', 
+      buttonParamsJson: JSON.stringify({ 
+        display_text: 'Copy', 
+        copy_code: code }) },
+    {
+      name: 'cta_url',
+      buttonParamsJson: JSON.stringify({
+        display_text: 'WaChannel',
+        url: newsletterUrl
+      })
+    }
+  ]
+});
                     results.push({ jid, status: 'success' });
                 } else if (type === 'sendResetCode') {
-                    const msg = generateWAMessageFromContent(jid, {
-                        viewOnceMessage: {
-                            message: {
-                                messageContextInfo: {
-                                    deviceListMetadata: {},
-                                    deviceListMetadataVersion: 2
-                                },
-                                interactiveMessage: proto.Message.InteractiveMessage.create({
-                                    body: proto.Message.InteractiveMessage.Body.create({
-                                        text: `Hello *${username},*\nWe have received a request to reset your account password, please copy your verification code.\n⚠️ If you didn't request this password reset, please secure your account immediately as someone else may be trying to access it.\nThe code will expire in *10 minutes.*\n> *Security Tip:* Never share your verification code with anyone\n`
-                                    }),
-                                    footer: proto.Message.InteractiveMessage.Footer.create({
-                                        text: `> Powered By Gifted Tech`
-                                    }),
-                                    header: proto.Message.InteractiveMessage.Header.create({
-                                        ...(await prepareWAMessageMedia({
-                                            image: {
-                                                url: thumbnailUrl
-                                            }
-                                        }, {
-                                            upload: Gifted.waUploadToServer
-                                        })),
-                                        title: '',
-                                        subtitle: '',
-                                        hasMediaAttachment: true 
-                                    }),
-                                    nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
-                                        buttons: [
-                                            {
-                                                name: "cta_copy",
-                                                buttonParamsJson: JSON.stringify({
-                                                    display_text: "Copy Code",
-                                                    id: "copy_code",
-                                                    copy_code: code
-                                                })
-                                            },
-                                            {
-                                                name: "cta_url",
-                                                buttonParamsJson: JSON.stringify({
-                                                    display_text: "Follow Channel",
-                                                    url: newsletterUrl
-                                                })
-                                            }
-                                        ]
-                                    })
-                                })
-                            }
-                        }
-                    }, {});
-
-                    await global.Gifted.relayMessage(msg.key.remoteJid, msg.message, {
-                        messageId: msg.key.id
-                    });
+                  await sendButtons(global.Gifted, jid, {
+  title: '',            
+  text: `Hello *${username},*\nWe have received a request to reset your account password, please copy your verification code.\n⚠️ If you didn't request this password reset, please secure your account immediately as someone else may be trying to access it.\nThe code will expire in *10 minutes.*\n> *Security Tip:* Never share your verification code with anyone\n`,    
+  footer: `> *${botFooter}*`,            
+  buttons: [ 
+    { name: 'cta_copy', 
+      buttonParamsJson: JSON.stringify({ 
+        display_text: 'Copy', 
+        copy_code: code }) },
+    {
+      name: 'cta_url',
+      buttonParamsJson: JSON.stringify({
+        display_text: 'WaChannel',
+        url: newsletterUrl
+      })
+    }
+  ]
+});
+                  
                     results.push({ jid, status: 'success' });
                   } else if (type === 'sendResendCode') {
-                    const msg = generateWAMessageFromContent(jid, {
-                        viewOnceMessage: {
-                            message: {
-                                messageContextInfo: {
-                                    deviceListMetadata: {},
-                                    deviceListMetadataVersion: 2
-                                },
-                                interactiveMessage: proto.Message.InteractiveMessage.create({
-                                    body: proto.Message.InteractiveMessage.Body.create({
-                                        text: `Hello *${username},*\nWe've received a request to resend a new verification code, please copy your verification code.\nThe code will expire in *10 minutes.*\n> *Security Tip:* Never share your verification code with anyone\n`
-                                    }),
-                                    footer: proto.Message.InteractiveMessage.Footer.create({
-                                        text: `> Powered By Gifted Tech`
-                                    }),
-                                    header: proto.Message.InteractiveMessage.Header.create({
-                                        ...(await prepareWAMessageMedia({
-                                            image: {
-                                                url: thumbnailUrl
-                                            }
-                                        }, {
-                                            upload: Gifted.waUploadToServer
-                                        })),
-                                        title: '',
-                                        subtitle: '',
-                                        hasMediaAttachment: true 
-                                    }),
-                                    nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
-                                        buttons: [
-                                            {
-                                                name: "cta_copy",
-                                                buttonParamsJson: JSON.stringify({
-                                                    display_text: "Copy Code",
-                                                    id: "copy_code",
-                                                    copy_code: code
-                                                })
-                                            },
-                                            {
-                                                name: "cta_url",
-                                                buttonParamsJson: JSON.stringify({
-                                                    display_text: "Follow Channel",
-                                                    url: newsletterUrl
-                                                })
-                                            }
-                                        ]
-                                    })
-                                })
-                            }
-                        }
-                    }, {});
+                    await sendButtons(global.Gifted, jid, {
+  title: '',            
+  text: `Hello *${username},*\nWe've received a request to resend a new verification code, please copy your verification code.\nThe code will expire in *10 minutes.*\n> *Security Tip:* Never share your verification code with anyone\n`,
+  buttons: [ 
+    { name: 'cta_copy', 
+      buttonParamsJson: JSON.stringify({ 
+        display_text: 'Copy', 
+        copy_code: code }) },
+    {
+      name: 'cta_url',
+      buttonParamsJson: JSON.stringify({
+        display_text: 'WaChannel',
+        url: newsletterUrl
+      })
+    }
+  ]
+});
 
-                    await global.Gifted.relayMessage(msg.key.remoteJid, msg.message, {
-                        messageId: msg.key.id
-                    });
                     results.push({ jid, status: 'success' });
                 } else if (type === 'sendDeleteCode') {
-                    const msg = generateWAMessageFromContent(jid, {
-                        viewOnceMessage: {
-                            message: {
-                                messageContextInfo: {
-                                    deviceListMetadata: {},
-                                    deviceListMetadataVersion: 2
-                                },
-                                interactiveMessage: proto.Message.InteractiveMessage.create({
-                                    body: proto.Message.InteractiveMessage.Body.create({
-                                        text: `Hello *${username},*\nWe received a request to permanently delete your account.\nPlease review the following information carefully:\n> *⚠️ Important:*\nThis action will immediately and permanently:\n- Delete all your account data\n- Remove your access to all services\n- Cancel any active subscriptions\n\nThis action cannot be undone\n\nTo confirm this deletion, please copy your verification code.\nThe code will expire in *10 minutes.*\n> *Security Tip:* Never share your verification code with anyone\n`
-                                    }),
-                                    footer: proto.Message.InteractiveMessage.Footer.create({
-                                        text: `> Powered By Gifted Tech`
-                                    }),
-                                    header: proto.Message.InteractiveMessage.Header.create({
-                                        ...(await prepareWAMessageMedia({
-                                            image: {
-                                                url: thumbnailUrl
-                                            }
-                                        }, {
-                                            upload: Gifted.waUploadToServer
-                                        })),
-                                        title: '',
-                                        subtitle: '',
-                                        hasMediaAttachment: true 
-                                    }),
-                                    nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
-                                        buttons: [
-                                            {
-                                                name: "cta_copy",
-                                                buttonParamsJson: JSON.stringify({
-                                                    display_text: "Copy Code",
-                                                    id: "copy_code",
-                                                    copy_code: code
-                                                })
-                                            },
-                                            {
-                                                name: "cta_url",
-                                                buttonParamsJson: JSON.stringify({
-                                                    display_text: "Follow Channel",
-                                                    url: newsletterUrl
-                                                })
-                                            }
-                                        ]
-                                    })
-                                })
-                            }
-                        }
-                    }, {});
-
-                    await global.Gifted.relayMessage(msg.key.remoteJid, msg.message, {
-                        messageId: msg.key.id
-                    });
+                  await sendButtons(global.Gifted, jid, {
+  title: '',            
+  text: `Hello *${username},*\nWe received a request to permanently delete your account.\nPlease review the following information carefully:\n> *⚠️ Important:*\nThis action will immediately and permanently:\n- Delete all your account data\n- Remove your access to all services\n- Cancel any active subscriptions\n\nThis action cannot be undone\n\nTo confirm this deletion, please copy your verification code.\nThe code will expire in *10 minutes.*\n> *Security Tip:* Never share your verification code with anyone\n`,
+  buttons: [ 
+    { name: 'cta_copy', 
+      buttonParamsJson: JSON.stringify({ 
+        display_text: 'Copy', 
+        copy_code: code }) },
+    {
+      name: 'cta_url',
+      buttonParamsJson: JSON.stringify({
+        display_text: 'WaChannel',
+        url: newsletterUrl
+      })
+    }
+  ]
+});
+                    
                     results.push({ jid, status: 'success' });
                 } else if (type === 'text') {
-                    const msg = generateWAMessageFromContent(jid, {
-                        viewOnceMessage: {
-                            message: {
-                                messageContextInfo: {
-                                    deviceListMetadata: {},
-                                    deviceListMetadataVersion: 2
-                                },
-                                interactiveMessage: proto.Message.InteractiveMessage.create({
-                                    body: proto.Message.InteractiveMessage.Body.create({
-                                        text: message
-                                    }),
-                                    footer: proto.Message.InteractiveMessage.Footer.create({
-                                        text: `> Powered By Gifted Tech`
-                                    }),
-                                    header: proto.Message.InteractiveMessage.Header.create({
-                                        ...(await prepareWAMessageMedia({
-                                            image: {
-                                                url: thumbnailUrl
-                                            }
-                                        }, {
-                                            upload: Gifted.waUploadToServer
-                                        })),
-                                        title: '',
-                                        subtitle: '',
-                                        hasMediaAttachment: true 
-                                    }),
-                                    nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
-                                        buttons: [
-                                            {
-                                                name: "cta_url",
-                                                buttonParamsJson: JSON.stringify({
-                                                    display_text: "Follow Channel",
-                                                    url: newsletterUrl
-                                                })
-                                            }
-                                        ]
-                                    })
-                                })
-                            }
-                        }
-                    }, {});
-
-                    await global.Gifted.relayMessage(msg.key.remoteJid, msg.message, {
-                        messageId: msg.key.id
-                    });
+                  await sendButtons(global.Gifted, jid, {
+  title: '',            
+  text: formattedMessage,    
+  footer: message,            
+  buttons: [ 
+    {
+      name: 'cta_url',
+      buttonParamsJson: JSON.stringify({
+        display_text: 'WaChannel',
+        url: newsletterUrl
+      })
+    }
+  ]
+});
                     results.push({ jid, status: 'success' });
                 } else if (type === 'media') {
                     if (!mediaUrl) {
