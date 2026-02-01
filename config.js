@@ -11,6 +11,7 @@ API_URL: process.env.API_URL || "https://whatsapp.giftedtech.co.ke", // Fill in 
 AUTO_LIKE_EMOJIS: process.env.AUTO_LIKE_EMOJIS || "💛,❤️,💜,🤍,💙", // Can be one Emoji or Multiple Emojis Separated by Commas
 MODE: process.env.MODE || "private", // Put private or public or inbox or groups
 AUTO_READ_MESSAGES: process.env.AUTO_READ_MESSAGES || "true",
+FOOTER : process.env.FOOTER || 'ᴘᴏᴡᴇʀᴇᴅ ʙʏ ɢɪғᴛᴇᴅ ᴛᴇᴄʜ',
 NEWSLETTER_JID: process.env.NEWSLETTER_JID || "120363403054496228@newsletter",
 NEWSLETTER_URL: process.env.NEWSLETTER_URL || "https://whatsapp.com/channel/0029Vb6lNd511ulWbxu1cT3A",
 PRESENCE: process.env.PRESENCE || "typing", // Choose one: typing, recording, online, null
