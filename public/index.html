@@ -291,10 +291,16 @@
             background: rgba(0, 0, 0, 0.5);
             z-index: 1999;
             opacity: 0;
-            transition: opacity 0.3s;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.3s, visibility 0.3s;
         }
 
-        .sidebar-overlay.open { opacity: 1; }
+        .sidebar-overlay.open { 
+            opacity: 1; 
+            visibility: visible;
+            pointer-events: auto;
+        }
 
         .sidebar-header {
             display: flex;
