@@ -190,7 +190,7 @@ async function startGifted() {
 
 async function sendConnectionMessage() {
     const startMess = {
-        image: { url: thumbnail },
+        image: { url: thumbnailUrl },
         caption: `
 *WHATSAPP INSTANCE IS ONLINE*
 
