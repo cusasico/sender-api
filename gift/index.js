@@ -101,44 +101,73 @@ async function handleIncomingMessages(mek) {
 
 const logger = pino({ level: "silent" });
 
-async function handleMediaMessage({ mediaUrl, mediaType, filename, caption }, jid) {
+async function handleMediaMessage({ mediaUrl, name, caption }, jid) {
     try {
-        let mimeType = mediaType;
+        const mimeMap = {
+            jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png',
+            gif: 'image/gif', webp: 'image/webp', mp4: 'video/mp4',
+            mov: 'video/quicktime', webm: 'video/webm', avi: 'video/x-msvideo',
+            mkv: 'video/x-matroska', mp3: 'audio/mpeg', ogg: 'audio/ogg',
+            wav: 'audio/wav', m4a: 'audio/mp4', aac: 'audio/aac',
+            pdf: 'application/pdf', zip: 'application/zip',
+            rar: 'application/x-rar-compressed', '7z': 'application/x-7z-compressed',
+            doc: 'application/msword',
+            docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            xls: 'application/vnd.ms-excel',
+            xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ppt: 'application/vnd.ms-powerpoint',
+            pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            txt: 'text/plain', csv: 'text/csv', json: 'application/json',
+            apk: 'application/vnd.android.package-archive'
+        };
+
+        let mimeType = null;
         
+        try {
+            const response = await axios.head(mediaUrl, { timeout: 5000 });
+            const contentType = response.headers['content-type']?.split(';')[0];
+            if (contentType && contentType !== 'application/octet-stream') {
+                mimeType = contentType;
+            }
+        } catch (err) {
+            console.warn('⚠️ Header detection failed, trying URL extension...');
+        }
+
         if (!mimeType) {
-            try {
-                const response = await axios.head(mediaUrl);
-                mimeType = response.headers['content-type']?.split(';')[0];
-            } catch (err) {
-                console.warn('⚠️ Header Detection Failed:', err.message);
+            const urlPath = new URL(mediaUrl).pathname;
+            const urlExt = urlPath.split('.').pop()?.toLowerCase();
+            if (urlExt && mimeMap[urlExt]) {
+                mimeType = mimeMap[urlExt];
             }
         }
 
-        if (!mimeType && filename && filename.includes('.')) {
-            const ext = filename.split('.').pop().toLowerCase();
-            const mimeMap = {
-                jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png',
-                gif: 'image/gif', webp: 'image/webp', mp4: 'video/mp4',
-                mov: 'video/quicktime', webm: 'video/webm', mp3: 'audio/mpeg',
-                ogg: 'audio/ogg', wav: 'audio/wav', pdf: 'application/pdf',
-                zip: 'application/zip', doc: 'application/msword',
-                docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                xls: 'application/vnd.ms-excel',
-                xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-            };
-            mimeType = mimeMap[ext];
+        if (!mimeType && name && name.includes('.')) {
+            const ext = name.split('.').pop().toLowerCase();
+            if (mimeMap[ext]) {
+                mimeType = mimeMap[ext];
+            }
         }
 
         if (!mimeType) {
-            throw new Error('Could not Determine Media MIME type. Please Specify "mediaType" Explicitly.');
+            mimeType = 'application/octet-stream';
+            console.warn('⚠️ Could not detect MIME type, defaulting to binary');
         }
 
-        let finalFilename = filename;
+        let finalFilename = name;
         if (!finalFilename) {
-            const ext = mimeType.split('/')[1] || 'bin';
+            try {
+                const urlPath = new URL(mediaUrl).pathname;
+                const urlFilename = urlPath.split('/').pop();
+                if (urlFilename && urlFilename.includes('.')) {
+                    finalFilename = urlFilename;
+                }
+            } catch (e) {}
+        }
+        if (!finalFilename) {
+            const ext = mimeType.split('/')[1]?.replace('jpeg', 'jpg') || 'bin';
             finalFilename = `file.${ext}`;
         } else if (!finalFilename.includes('.')) {
-            const ext = mimeType.split('/')[1] || 'bin';
+            const ext = mimeType.split('/')[1]?.replace('jpeg', 'jpg') || 'bin';
             finalFilename = `${finalFilename}.${ext}`;
         }
 

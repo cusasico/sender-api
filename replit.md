@@ -9,6 +9,7 @@ WhatsApp API server using gifted-baileys and Express. Provides an API for sendin
 - `gift/` - Helper modules for session management and message handling
 - `public/index.html` - API documentation page with professional design
 - `public/playground.html` - Interactive API playground for testing
+- `public/examples.html` - Code examples in cURL, JavaScript, and Python
 - `.env` - Environment variables (SESSION_ID for WhatsApp auth)
 
 ## Setup
@@ -22,6 +23,7 @@ WhatsApp API server using gifted-baileys and Express. Provides an API for sendin
 - `GET /health` - Health check endpoint
 - `GET /` - API documentation page
 - `GET /playground.html` - Interactive API testing playground
+- `GET /examples.html` - Code examples page
 
 ## Message Types
 - `text` - Simple text message with channel button
@@ -50,12 +52,21 @@ Environment variables in `.env`:
 - Header with rounded logo and WASENDER API gradient branding
 - Mobile responsive sidebar navigation
 - Particles.js animated background
-- Dark/light theme toggle
+- Dark theme by default (light theme available)
 - Animated heartbeat footer with Gifted Tech link
 - Real-time connection status indicator
+- Code examples page with cURL, JavaScript, Python
 - API domain: https://whatsapp.giftedtech.co.ke
 
+## Media Message Handling
+- Auto-detects MIME type from HTTP headers, URL extension, or filename
+- Only requires: mediaUrl (required), name (optional for documents), caption (optional)
+- Supports images, videos, audio, documents (PDF, DOCX, etc.)
+
 ## Recent Changes
+- 2026-02-01: Added examples page with code snippets for cURL, JavaScript, Python
+- 2026-02-01: Made dark theme the default for new users
+- 2026-02-01: Improved media handling with auto MIME type detection
 - 2026-02-01: Complete frontend redesign with separate documentation and playground pages
 - 2026-02-01: Added header with logo, mobile sidebar, particles.js background
 - 2026-02-01: Fixed connection stability issues with better state management

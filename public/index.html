@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -557,6 +557,7 @@
             <nav class="nav-links">
                 <a href="/" class="active">Documentation</a>
                 <a href="/playground.html">Playground</a>
+                <a href="/examples.html">Examples</a>
             </nav>
             <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Theme">🌙</button>
             <button class="mobile-menu-btn" onclick="toggleSidebar()">
@@ -577,6 +578,7 @@
         <nav class="sidebar-nav">
             <a href="/" class="active">Documentation</a>
             <a href="/playground.html">Playground</a>
+            <a href="/examples.html">Examples</a>
         </nav>
     </aside>
 
@@ -813,8 +815,10 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'dark');
+            if (savedTheme === 'light') {
+                document.documentElement.removeAttribute('data-theme');
+                document.querySelector('.theme-toggle').textContent = '🌙';
+            } else {
                 document.querySelector('.theme-toggle').textContent = '☀️';
             }
             initParticles();

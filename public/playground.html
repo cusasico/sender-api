@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -577,6 +577,7 @@
             <nav class="nav-links">
                 <a href="/">Documentation</a>
                 <a href="/playground.html" class="active">Playground</a>
+                <a href="/examples.html">Examples</a>
             </nav>
             <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Theme">🌙</button>
             <button class="mobile-menu-btn" onclick="toggleSidebar()">
@@ -597,6 +598,7 @@
         <nav class="sidebar-nav">
             <a href="/">Documentation</a>
             <a href="/playground.html" class="active">Playground</a>
+            <a href="/examples.html">Examples</a>
         </nav>
     </aside>
 
@@ -658,6 +660,10 @@
                     <div class="form-group">
                         <label>Media URL</label>
                         <input type="text" class="form-control" id="mediaUrl" placeholder="https://example.com/image.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label>Name (optional, required for documents)</label>
+                        <input type="text" class="form-control" id="mediaName" placeholder="document.pdf">
                     </div>
                     <div class="form-group">
                         <label>Caption (optional)</label>
@@ -766,8 +772,16 @@
                 }
                 payload.message = message;
             } else if (currentType === 'media') {
-                payload.mediaUrl = document.getElementById('mediaUrl').value.trim();
-                payload.caption = document.getElementById('caption').value.trim();
+                const mediaUrl = document.getElementById('mediaUrl').value.trim();
+                if (!mediaUrl) {
+                    showResponse(false, { error: 'Media URL is required' });
+                    return;
+                }
+                payload.mediaUrl = mediaUrl;
+                const mediaName = document.getElementById('mediaName').value.trim();
+                if (mediaName) payload.name = mediaName;
+                const caption = document.getElementById('caption').value.trim();
+                if (caption) payload.caption = caption;
             } else {
                 const username = document.getElementById('username').value.trim();
                 const code = document.getElementById('code').value.trim();
@@ -870,8 +884,10 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'dark');
+            if (savedTheme === 'light') {
+                document.documentElement.removeAttribute('data-theme');
+                document.querySelector('.theme-toggle').textContent = '🌙';
+            } else {
                 document.querySelector('.theme-toggle').textContent = '☀️';
             }
             initParticles();

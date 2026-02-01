@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Examples - WaSender API</title>
+    <meta name="description" content="Code examples for WaSender WhatsApp API in cURL, JavaScript, and Python.">
+    <meta property="og:title" content="Code Examples - WaSender API">
+    <meta property="og:description" content="Code examples for WaSender WhatsApp API.">
+    <meta property="og:image" content="https://gitcdn.giftedtech.co.ke/image/AZO_image.jpg">
+    <meta property="og:url" content="https://whatsapp.giftedtech.co.ke/examples.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://gitcdn.giftedtech.co.ke/image/AZO_image.jpg">
+    <link rel="icon" type="image/jpeg" href="https://gitcdn.giftedtech.co.ke/image/AZO_image.jpg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --accent-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --accent-color: #667eea;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --code-bg: #1e293b;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            --code-bg: #0f172a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-color);
+        }
+
+        .logo-text {
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--accent-color);
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent-gradient);
+            border-radius: 2px;
+        }
+
+        .theme-toggle {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            cursor: pointer;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .mobile-menu-btn span {
+            width: 20px;
+            height: 2px;
+            background: var(--text-primary);
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+
+        .sidebar {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background: var(--bg-card);
+            z-index: 2000;
+            transition: left 0.3s ease;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .sidebar.open { left: 0; }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1999;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .sidebar-overlay.open { opacity: 1; }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-nav { padding: 20px; }
+
+        .sidebar-nav a {
+            display: block;
+            padding: 14px 16px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            transition: all 0.3s;
+        }
+
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            background: var(--bg-secondary);
+            color: var(--accent-color);
+        }
+
+        .sidebar-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: var(--bg-secondary);
+            cursor: pointer;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+        }
+
+        .main-content {
+            position: relative;
+            z-index: 1;
+            padding-top: 90px;
+            padding-bottom: 120px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page-title h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-title p {
+            color: var(--text-secondary);
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .card h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .lang-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .lang-tab {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: all 0.3s;
+        }
+
+        .lang-tab:hover {
+            border-color: var(--accent-color);
+        }
+
+        .lang-tab.active {
+            background: var(--accent-gradient);
+            color: white;
+            border-color: transparent;
+        }
+
+        .code-block {
+            display: none;
+            position: relative;
+        }
+
+        .code-block.active {
+            display: block;
+        }
+
+        pre {
+            background: var(--code-bg);
+            border-radius: 12px;
+            padding: 20px;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            border: 1px solid var(--border-color);
+        }
+
+        code {
+            font-family: 'Courier New', Consolas, monospace;
+            color: #e2e8f0;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 6px;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .copy-btn.copied {
+            background: #22c55e;
+            color: white;
+        }
+
+        .keyword { color: #c678dd; }
+        .string { color: #98c379; }
+        .property { color: #61afef; }
+        .comment { color: #5c6370; font-style: italic; }
+        .number { color: #d19a66; }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            padding: 16px 24px;
+            text-align: center;
+            z-index: 100;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
+
+        .footer-credit {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .footer-credit a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer-credit a:hover { text-decoration: underline; }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            14% { transform: scale(1.3); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.3); }
+            56% { transform: scale(1); }
+        }
+
+        @keyframes colorChange {
+            0% { color: #ef4444; }
+            20% { color: #ec4899; }
+            40% { color: #f43f5e; }
+            60% { color: #e11d48; }
+            80% { color: #db2777; }
+            100% { color: #ef4444; }
+        }
+
+        .heart-animated {
+            display: inline-block;
+            animation: heartbeat 1.2s ease-in-out infinite, colorChange 3s ease-in-out infinite;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .mobile-menu-btn { display: flex; }
+            .sidebar { display: block; }
+            .sidebar-overlay { display: block; }
+
+            .page-title h1 { font-size: 1.5rem; }
+            .card { padding: 16px; }
+            .logo-text { font-size: 1.2rem; }
+            pre { font-size: 0.75rem; padding: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+
+    <header class="header">
+        <div class="header-left">
+            <img src="https://gitcdn.giftedtech.co.ke/image/AZO_image.jpg" alt="WaSender API" class="logo-img">
+            <span class="logo-text">WASENDER API</span>
+        </div>
+        <div class="header-right">
+            <nav class="nav-links">
+                <a href="/">Documentation</a>
+                <a href="/playground.html">Playground</a>
+                <a href="/examples.html" class="active">Examples</a>
+            </nav>
+            <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Theme">☀️</button>
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+    <aside class="sidebar">
+        <button class="sidebar-close" onclick="closeSidebar()">✕</button>
+        <div class="sidebar-header">
+            <img src="https://gitcdn.giftedtech.co.ke/image/AZO_image.jpg" alt="WaSender API" class="logo-img">
+            <span class="logo-text">WASENDER API</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="/">Documentation</a>
+            <a href="/playground.html">Playground</a>
+            <a href="/examples.html" class="active">Examples</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="container">
+            <section class="page-title">
+                <h1>📚 Code Examples</h1>
+                <p>Ready-to-use code snippets in cURL, JavaScript, and Python</p>
+            </section>
+
+            <div class="card">
+                <h2>📝 Send Text Message</h2>
+                <div class="lang-tabs">
+                    <button class="lang-tab active" data-lang="curl" data-section="text">cURL</button>
+                    <button class="lang-tab" data-lang="js" data-section="text">JavaScript</button>
+                    <button class="lang-tab" data-lang="py" data-section="text">Python</button>
+                </div>
+                <div class="code-block active" data-lang="curl" data-section="text">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code>curl -X POST https://whatsapp.giftedtech.co.ke/api/sendMessage.php \
+  -H "Content-Type: application/json" \
+  -d '{
+    "number": "2547XXXXXXXX",
+    "type": "text",
+    "message": "Hello from WaSender API!"
+  }'</code></pre>
+                </div>
+                <div class="code-block" data-lang="js" data-section="text">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code><span class="keyword">const</span> response = <span class="keyword">await</span> <span class="property">fetch</span>(<span class="string">'https://whatsapp.giftedtech.co.ke/api/sendMessage.php'</span>, {
+  <span class="property">method</span>: <span class="string">'POST'</span>,
+  <span class="property">headers</span>: { <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span> },
+  <span class="property">body</span>: JSON.<span class="property">stringify</span>({
+    <span class="property">number</span>: <span class="string">'2547XXXXXXXX'</span>,
+    <span class="property">type</span>: <span class="string">'text'</span>,
+    <span class="property">message</span>: <span class="string">'Hello from WaSender API!'</span>
+  })
+});
+
+<span class="keyword">const</span> data = <span class="keyword">await</span> response.<span class="property">json</span>();
+console.<span class="property">log</span>(data);</code></pre>
+                </div>
+                <div class="code-block" data-lang="py" data-section="text">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code><span class="keyword">import</span> requests
+
+response = requests.<span class="property">post</span>(
+    <span class="string">'https://whatsapp.giftedtech.co.ke/api/sendMessage.php'</span>,
+    <span class="property">json</span>={
+        <span class="string">'number'</span>: <span class="string">'2547XXXXXXXX'</span>,
+        <span class="string">'type'</span>: <span class="string">'text'</span>,
+        <span class="string">'message'</span>: <span class="string">'Hello from WaSender API!'</span>
+    }
+)
+
+<span class="keyword">print</span>(response.<span class="property">json</span>())</code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📎 Send Media Message (Image)</h2>
+                <div class="lang-tabs">
+                    <button class="lang-tab active" data-lang="curl" data-section="media">cURL</button>
+                    <button class="lang-tab" data-lang="js" data-section="media">JavaScript</button>
+                    <button class="lang-tab" data-lang="py" data-section="media">Python</button>
+                </div>
+                <div class="code-block active" data-lang="curl" data-section="media">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code>curl -X POST https://whatsapp.giftedtech.co.ke/api/sendMessage.php \
+  -H "Content-Type: application/json" \
+  -d '{
+    "number": "2547XXXXXXXX",
+    "type": "media",
+    "mediaUrl": "https://example.com/image.jpg",
+    "caption": "Check out this image!"
+  }'</code></pre>
+                </div>
+                <div class="code-block" data-lang="js" data-section="media">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code><span class="keyword">const</span> response = <span class="keyword">await</span> <span class="property">fetch</span>(<span class="string">'https://whatsapp.giftedtech.co.ke/api/sendMessage.php'</span>, {
+  <span class="property">method</span>: <span class="string">'POST'</span>,
+  <span class="property">headers</span>: { <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span> },
+  <span class="property">body</span>: JSON.<span class="property">stringify</span>({
+    <span class="property">number</span>: <span class="string">'2547XXXXXXXX'</span>,
+    <span class="property">type</span>: <span class="string">'media'</span>,
+    <span class="property">mediaUrl</span>: <span class="string">'https://example.com/image.jpg'</span>,
+    <span class="property">caption</span>: <span class="string">'Check out this image!'</span>
+  })
+});
+
+<span class="keyword">const</span> data = <span class="keyword">await</span> response.<span class="property">json</span>();
+console.<span class="property">log</span>(data);</code></pre>
+                </div>
+                <div class="code-block" data-lang="py" data-section="media">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code><span class="keyword">import</span> requests
+
+response = requests.<span class="property">post</span>(
+    <span class="string">'https://whatsapp.giftedtech.co.ke/api/sendMessage.php'</span>,
+    <span class="property">json</span>={
+        <span class="string">'number'</span>: <span class="string">'2547XXXXXXXX'</span>,
+        <span class="string">'type'</span>: <span class="string">'media'</span>,
+        <span class="string">'mediaUrl'</span>: <span class="string">'https://example.com/image.jpg'</span>,
+        <span class="string">'caption'</span>: <span class="string">'Check out this image!'</span>
+    }
+)
+
+<span class="keyword">print</span>(response.<span class="property">json</span>())</code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📄 Send Document</h2>
+                <div class="lang-tabs">
+                    <button class="lang-tab active" data-lang="curl" data-section="doc">cURL</button>
+                    <button class="lang-tab" data-lang="js" data-section="doc">JavaScript</button>
+                    <button class="lang-tab" data-lang="py" data-section="doc">Python</button>
+                </div>
+                <div class="code-block active" data-lang="curl" data-section="doc">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code>curl -X POST https://whatsapp.giftedtech.co.ke/api/sendMessage.php \
+  -H "Content-Type: application/json" \
+  -d '{
+    "number": "2547XXXXXXXX",
+    "type": "media",
+    "mediaUrl": "https://example.com/document.pdf",
+    "name": "Invoice_2024.pdf",
+    "caption": "Here is your invoice"
+  }'</code></pre>
+                </div>
+                <div class="code-block" data-lang="js" data-section="doc">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code><span class="keyword">const</span> response = <span class="keyword">await</span> <span class="property">fetch</span>(<span class="string">'https://whatsapp.giftedtech.co.ke/api/sendMessage.php'</span>, {
+  <span class="property">method</span>: <span class="string">'POST'</span>,
+  <span class="property">headers</span>: { <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span> },
+  <span class="property">body</span>: JSON.<span class="property">stringify</span>({
+    <span class="property">number</span>: <span class="string">'2547XXXXXXXX'</span>,
+    <span class="property">type</span>: <span class="string">'media'</span>,
+    <span class="property">mediaUrl</span>: <span class="string">'https://example.com/document.pdf'</span>,
+    <span class="property">name</span>: <span class="string">'Invoice_2024.pdf'</span>,
+    <span class="property">caption</span>: <span class="string">'Here is your invoice'</span>
+  })
+});
+
+<span class="keyword">const</span> data = <span class="keyword">await</span> response.<span class="property">json</span>();
+console.<span class="property">log</span>(data);</code></pre>
+                </div>
+                <div class="code-block" data-lang="py" data-section="doc">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code><span class="keyword">import</span> requests
+
+response = requests.<span class="property">post</span>(
+    <span class="string">'https://whatsapp.giftedtech.co.ke/api/sendMessage.php'</span>,
+    <span class="property">json</span>={
+        <span class="string">'number'</span>: <span class="string">'2547XXXXXXXX'</span>,
+        <span class="string">'type'</span>: <span class="string">'media'</span>,
+        <span class="string">'mediaUrl'</span>: <span class="string">'https://example.com/document.pdf'</span>,
+        <span class="string">'name'</span>: <span class="string">'Invoice_2024.pdf'</span>,
+        <span class="string">'caption'</span>: <span class="string">'Here is your invoice'</span>
+    }
+)
+
+<span class="keyword">print</span>(response.<span class="property">json</span>())</code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🔐 Send Signup Verification Code</h2>
+                <div class="lang-tabs">
+                    <button class="lang-tab active" data-lang="curl" data-section="signup">cURL</button>
+                    <button class="lang-tab" data-lang="js" data-section="signup">JavaScript</button>
+                    <button class="lang-tab" data-lang="py" data-section="signup">Python</button>
+                </div>
+                <div class="code-block active" data-lang="curl" data-section="signup">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code>curl -X POST https://whatsapp.giftedtech.co.ke/api/sendMessage.php \
+  -H "Content-Type: application/json" \
+  -d '{
+    "number": "2547XXXXXXXX",
+    "type": "sendSignupCode",
+    "username": "JohnDoe",
+    "code": "123456"
+  }'</code></pre>
+                </div>
+                <div class="code-block" data-lang="js" data-section="signup">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code><span class="keyword">const</span> response = <span class="keyword">await</span> <span class="property">fetch</span>(<span class="string">'https://whatsapp.giftedtech.co.ke/api/sendMessage.php'</span>, {
+  <span class="property">method</span>: <span class="string">'POST'</span>,
+  <span class="property">headers</span>: { <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span> },
+  <span class="property">body</span>: JSON.<span class="property">stringify</span>({
+    <span class="property">number</span>: <span class="string">'2547XXXXXXXX'</span>,
+    <span class="property">type</span>: <span class="string">'sendSignupCode'</span>,
+    <span class="property">username</span>: <span class="string">'JohnDoe'</span>,
+    <span class="property">code</span>: <span class="string">'123456'</span>
+  })
+});
+
+<span class="keyword">const</span> data = <span class="keyword">await</span> response.<span class="property">json</span>();
+console.<span class="property">log</span>(data);</code></pre>
+                </div>
+                <div class="code-block" data-lang="py" data-section="signup">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code><span class="keyword">import</span> requests
+
+response = requests.<span class="property">post</span>(
+    <span class="string">'https://whatsapp.giftedtech.co.ke/api/sendMessage.php'</span>,
+    <span class="property">json</span>={
+        <span class="string">'number'</span>: <span class="string">'2547XXXXXXXX'</span>,
+        <span class="string">'type'</span>: <span class="string">'sendSignupCode'</span>,
+        <span class="string">'username'</span>: <span class="string">'JohnDoe'</span>,
+        <span class="string">'code'</span>: <span class="string">'123456'</span>
+    }
+)
+
+<span class="keyword">print</span>(response.<span class="property">json</span>())</code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🔄 Send Password Reset Code</h2>
+                <div class="lang-tabs">
+                    <button class="lang-tab active" data-lang="curl" data-section="reset">cURL</button>
+                    <button class="lang-tab" data-lang="js" data-section="reset">JavaScript</button>
+                    <button class="lang-tab" data-lang="py" data-section="reset">Python</button>
+                </div>
+                <div class="code-block active" data-lang="curl" data-section="reset">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code>curl -X POST https://whatsapp.giftedtech.co.ke/api/sendMessage.php \
+  -H "Content-Type: application/json" \
+  -d '{
+    "number": "2547XXXXXXXX",
+    "type": "sendResetCode",
+    "username": "JohnDoe",
+    "code": "654321"
+  }'</code></pre>
+                </div>
+                <div class="code-block" data-lang="js" data-section="reset">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code><span class="keyword">const</span> response = <span class="keyword">await</span> <span class="property">fetch</span>(<span class="string">'https://whatsapp.giftedtech.co.ke/api/sendMessage.php'</span>, {
+  <span class="property">method</span>: <span class="string">'POST'</span>,
+  <span class="property">headers</span>: { <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span> },
+  <span class="property">body</span>: JSON.<span class="property">stringify</span>({
+    <span class="property">number</span>: <span class="string">'2547XXXXXXXX'</span>,
+    <span class="property">type</span>: <span class="string">'sendResetCode'</span>,
+    <span class="property">username</span>: <span class="string">'JohnDoe'</span>,
+    <span class="property">code</span>: <span class="string">'654321'</span>
+  })
+});
+
+<span class="keyword">const</span> data = <span class="keyword">await</span> response.<span class="property">json</span>();
+console.<span class="property">log</span>(data);</code></pre>
+                </div>
+                <div class="code-block" data-lang="py" data-section="reset">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code><span class="keyword">import</span> requests
+
+response = requests.<span class="property">post</span>(
+    <span class="string">'https://whatsapp.giftedtech.co.ke/api/sendMessage.php'</span>,
+    <span class="property">json</span>={
+        <span class="string">'number'</span>: <span class="string">'2547XXXXXXXX'</span>,
+        <span class="string">'type'</span>: <span class="string">'sendResetCode'</span>,
+        <span class="string">'username'</span>: <span class="string">'JohnDoe'</span>,
+        <span class="string">'code'</span>: <span class="string">'654321'</span>
+    }
+)
+
+<span class="keyword">print</span>(response.<span class="property">json</span>())</code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>⚠️ Send Account Deletion Code</h2>
+                <div class="lang-tabs">
+                    <button class="lang-tab active" data-lang="curl" data-section="delete">cURL</button>
+                    <button class="lang-tab" data-lang="js" data-section="delete">JavaScript</button>
+                    <button class="lang-tab" data-lang="py" data-section="delete">Python</button>
+                </div>
+                <div class="code-block active" data-lang="curl" data-section="delete">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code>curl -X POST https://whatsapp.giftedtech.co.ke/api/sendMessage.php \
+  -H "Content-Type: application/json" \
+  -d '{
+    "number": "2547XXXXXXXX",
+    "type": "sendDeleteCode",
+    "username": "JohnDoe",
+    "code": "999999"
+  }'</code></pre>
+                </div>
+                <div class="code-block" data-lang="js" data-section="delete">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code><span class="keyword">const</span> response = <span class="keyword">await</span> <span class="property">fetch</span>(<span class="string">'https://whatsapp.giftedtech.co.ke/api/sendMessage.php'</span>, {
+  <span class="property">method</span>: <span class="string">'POST'</span>,
+  <span class="property">headers</span>: { <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span> },
+  <span class="property">body</span>: JSON.<span class="property">stringify</span>({
+    <span class="property">number</span>: <span class="string">'2547XXXXXXXX'</span>,
+    <span class="property">type</span>: <span class="string">'sendDeleteCode'</span>,
+    <span class="property">username</span>: <span class="string">'JohnDoe'</span>,
+    <span class="property">code</span>: <span class="string">'999999'</span>
+  })
+});
+
+<span class="keyword">const</span> data = <span class="keyword">await</span> response.<span class="property">json</span>();
+console.<span class="property">log</span>(data);</code></pre>
+                </div>
+                <div class="code-block" data-lang="py" data-section="delete">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code><span class="keyword">import</span> requests
+
+response = requests.<span class="property">post</span>(
+    <span class="string">'https://whatsapp.giftedtech.co.ke/api/sendMessage.php'</span>,
+    <span class="property">json</span>={
+        <span class="string">'number'</span>: <span class="string">'2547XXXXXXXX'</span>,
+        <span class="string">'type'</span>: <span class="string">'sendDeleteCode'</span>,
+        <span class="string">'username'</span>: <span class="string">'JohnDoe'</span>,
+        <span class="string">'code'</span>: <span class="string">'999999'</span>
+    }
+)
+
+<span class="keyword">print</span>(response.<span class="property">json</span>())</code></pre>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p class="footer-text">© 2025-2026 Gifted WaSender Api</p>
+        <p class="footer-credit">Crafted with <span class="heart-animated">❤️</span> <a href="https://me.giftedtech.co.ke" target="_blank">Gifted Tech</a></p>
+    </footer>
+
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const btn = document.querySelector('.theme-toggle');
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.removeAttribute('data-theme');
+                btn.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                btn.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            }
+            initParticles();
+        }
+
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.add('open');
+            document.querySelector('.sidebar-overlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSidebar() {
+            document.querySelector('.sidebar').classList.remove('open');
+            document.querySelector('.sidebar-overlay').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        document.querySelectorAll('.lang-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const section = this.dataset.section;
+                const lang = this.dataset.lang;
+
+                document.querySelectorAll(`.lang-tab[data-section="${section}"]`).forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+
+                document.querySelectorAll(`.code-block[data-section="${section}"]`).forEach(b => b.classList.remove('active'));
+                document.querySelector(`.code-block[data-section="${section}"][data-lang="${lang}"]`).classList.add('active');
+            });
+        });
+
+        function copyCode(btn) {
+            const code = btn.parentElement.querySelector('code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        function initParticles() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            particlesJS('particles-js', {
+                particles: {
+                    number: { value: 50, density: { enable: true, value_area: 800 } },
+                    color: { value: isDark ? '#667eea' : '#764ba2' },
+                    shape: { type: 'circle' },
+                    opacity: { value: 0.3, random: true },
+                    size: { value: 3, random: true },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: isDark ? '#667eea' : '#764ba2',
+                        opacity: 0.2,
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 2,
+                        direction: 'none',
+                        random: false,
+                        straight: false,
+                        out_mode: 'out'
+                    }
+                },
+                interactivity: {
+                    detect_on: 'canvas',
+                    events: {
+                        onhover: { enable: true, mode: 'grab' },
+                        resize: true
+                    },
+                    modes: {
+                        grab: { distance: 140, line_linked: { opacity: 0.5 } }
+                    }
+                },
+                retina_detect: true
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                document.documentElement.removeAttribute('data-theme');
+                document.querySelector('.theme-toggle').textContent = '🌙';
+            } else {
+                document.querySelector('.theme-toggle').textContent = '☀️';
+            }
+            initParticles();
+        });
+    </script>
+</body>
+</html>

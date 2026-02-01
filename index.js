@@ -334,7 +334,7 @@ app.post('/api/sendMessage.php', async (req, res) => {
         }
     }
 
-    const { number, message, username, code, type, mediaUrl, mediaType, filename, caption } = req.body;
+    const { number, message, username, code, type, mediaUrl, name, caption } = req.body;
     
     const codeTypes = ['sendSignupCode', 'sendResetCode', 'sendResendCode', 'sendDeleteCode'];
     const isCodeType = codeTypes.includes(type);
@@ -486,7 +486,7 @@ app.post('/api/sendMessage.php', async (req, res) => {
                         continue;
                     }
                     await sendWithRetry(async () => {
-                        await handleMediaMessage({ mediaUrl, mediaType, filename, caption }, jid);
+                        await handleMediaMessage({ mediaUrl, name, caption }, jid);
                     });
                     results.push({ jid, status: 'success' });
                 } else {
