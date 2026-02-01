@@ -983,6 +983,50 @@
             setTheme(savedTheme);
             checkStatus();
             setInterval(checkStatus, 10000);
+            
+            // Mobile touch event listeners
+            const themeToggle = document.querySelector('.theme-toggle');
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const sidebarOverlay = document.querySelector('.sidebar-overlay');
+            const sidebarClose = document.querySelector('.sidebar-close');
+            const themeOptions = document.querySelectorAll('.theme-option');
+            
+            if (themeToggle) {
+                themeToggle.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    toggleThemeDropdown();
+                });
+            }
+            
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    toggleSidebar();
+                });
+            }
+            
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    closeSidebar();
+                });
+            }
+            
+            if (sidebarClose) {
+                sidebarClose.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    closeSidebar();
+                });
+            }
+            
+            themeOptions.forEach(function(option, index) {
+                option.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    if (index === 0) setTheme('light');
+                    else if (index === 1) setTheme('dark');
+                    else setTheme('system');
+                });
+            });
         });
     </script>
 </body>
