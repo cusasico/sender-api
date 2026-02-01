@@ -58,8 +58,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0;
+            z-index: -1;
             pointer-events: none;
+        }
+
+        #particles-js canvas {
+            pointer-events: none !important;
         }
 
         .header {
@@ -77,6 +81,11 @@
             padding: 0 24px;
             z-index: 1000;
             box-shadow: var(--shadow);
+            pointer-events: auto;
+        }
+
+        .header * {
+            pointer-events: auto;
         }
 
         .header-left {
@@ -324,6 +333,7 @@
             padding-top: 76px;
             padding-bottom: 120px;
             min-height: 100vh;
+            pointer-events: auto;
         }
 
         .container {
@@ -1033,57 +1043,44 @@ response = requests.<span class="property">post</span>(
             setTheme(savedTheme);
         });
 
-        function handleClick(element, callback) {
-            let touchMoved = false;
-            
-            element.addEventListener('touchstart', function() {
-                touchMoved = false;
-            }, { passive: true });
-            
-            element.addEventListener('touchmove', function() {
-                touchMoved = true;
-            }, { passive: true });
-            
-            element.addEventListener('touchend', function(e) {
-                if (!touchMoved) {
-                    e.preventDefault();
-                    callback(e);
-                }
-            });
-            
-            element.addEventListener('click', function(e) {
-                if (e.pointerType !== 'touch') {
-                    callback(e);
-                }
-            });
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
-            const themeToggle = document.getElementById('themeToggle');
-            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            const sidebarOverlay = document.getElementById('sidebarOverlay');
-            const sidebarClose = document.getElementById('sidebarClose');
-            const themeOptions = document.querySelectorAll('.theme-option');
+            var themeToggle = document.getElementById('themeToggle');
+            var mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            var sidebarOverlay = document.getElementById('sidebarOverlay');
+            var sidebarClose = document.getElementById('sidebarClose');
+            var themeOptions = document.querySelectorAll('.theme-option');
 
             if (themeToggle) {
-                handleClick(themeToggle, toggleThemeDropdown);
+                themeToggle.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleThemeDropdown();
+                });
             }
             
             if (mobileMenuBtn) {
-                handleClick(mobileMenuBtn, toggleSidebar);
+                mobileMenuBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleSidebar();
+                });
             }
             
             if (sidebarOverlay) {
-                handleClick(sidebarOverlay, closeSidebar);
+                sidebarOverlay.addEventListener('click', function(e) {
+                    closeSidebar();
+                });
             }
             
             if (sidebarClose) {
-                handleClick(sidebarClose, closeSidebar);
+                sidebarClose.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    closeSidebar();
+                });
             }
             
             themeOptions.forEach(function(option) {
-                handleClick(option, function() {
-                    const themeName = option.getAttribute('data-theme');
+                option.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    var themeName = option.getAttribute('data-theme');
                     if (themeName) {
                         setTheme(themeName);
                     }
