@@ -15,7 +15,9 @@ const express = require('express'),
       path = require('path'),
       axios = require('axios'),
       config = require('./config'),
-      { THUMBNAIL: thumbnail } = config,
+      { THUMBNAIL: thumbnail,
+        NEWSLETTER_JID: newsletterJid,
+        NEWSLETTER_URL: newsletterUrl } = config,
       { loadSession, CustomStore, logger, handleIncomingMessages, saveMessage, handleMediaMessage } = require('./gift');
 
 const app = express();
@@ -198,7 +200,7 @@ Auto-Like Status     : *${config.AUTO_LIKE_STATUS}*
             forwardingScore: 5,
             isForwarded: true,
             forwardedNewsletterMessageInfo: {
-                newsletterJid: '120363408839929349@newsletter',
+                newsletterJid: newsletterJid,
                 newsletterName: "GIFTED-TECH",
                 serverMessageId: 143
             }
@@ -259,7 +261,7 @@ app.post('/api/sendMessage.php', async (req, res) => {
                                     header: proto.Message.InteractiveMessage.Header.create({
                                         ...(await prepareWAMessageMedia({
                                             image: {
-                                                url: "https://files.giftedtech.web.id/image/hwOverif-code.jpg"
+                                                url: thumbnailUrl
                                             }
                                         }, {
                                             upload: Gifted.waUploadToServer
@@ -282,7 +284,7 @@ app.post('/api/sendMessage.php', async (req, res) => {
                                                 name: "cta_url",
                                                 buttonParamsJson: JSON.stringify({
                                                     display_text: "Follow Channel",
-                                                    url: "https://whatsapp.com/channel/0029Vb3hlgX5kg7G0nFggl0Y"
+                                                    url: newsletterUrl
                                                 })
                                             }
                                         ]
@@ -314,7 +316,7 @@ app.post('/api/sendMessage.php', async (req, res) => {
                                     header: proto.Message.InteractiveMessage.Header.create({
                                         ...(await prepareWAMessageMedia({
                                             image: {
-                                                url: "https://files.giftedtech.web.id/image/hwOverif-code.jpg"
+                                                url: thumbnailUrl
                                             }
                                         }, {
                                             upload: Gifted.waUploadToServer
@@ -337,7 +339,7 @@ app.post('/api/sendMessage.php', async (req, res) => {
                                                 name: "cta_url",
                                                 buttonParamsJson: JSON.stringify({
                                                     display_text: "Follow Channel",
-                                                    url: "https://whatsapp.com/channel/0029Vb3hlgX5kg7G0nFggl0Y"
+                                                    url: newsletterUrl
                                                 })
                                             }
                                         ]
@@ -369,7 +371,7 @@ app.post('/api/sendMessage.php', async (req, res) => {
                                     header: proto.Message.InteractiveMessage.Header.create({
                                         ...(await prepareWAMessageMedia({
                                             image: {
-                                                url: "https://files.giftedtech.web.id/image/hwOverif-code.jpg"
+                                                url: thumbnailUrl
                                             }
                                         }, {
                                             upload: Gifted.waUploadToServer
@@ -392,7 +394,7 @@ app.post('/api/sendMessage.php', async (req, res) => {
                                                 name: "cta_url",
                                                 buttonParamsJson: JSON.stringify({
                                                     display_text: "Follow Channel",
-                                                    url: "https://whatsapp.com/channel/0029Vb3hlgX5kg7G0nFggl0Y"
+                                                    url: newsletterUrl
                                                 })
                                             }
                                         ]
@@ -424,7 +426,7 @@ app.post('/api/sendMessage.php', async (req, res) => {
                                     header: proto.Message.InteractiveMessage.Header.create({
                                         ...(await prepareWAMessageMedia({
                                             image: {
-                                                url: "https://files.giftedtech.web.id/image/hwOverif-code.jpg"
+                                                url: thumbnailUrl
                                             }
                                         }, {
                                             upload: Gifted.waUploadToServer
@@ -447,7 +449,7 @@ app.post('/api/sendMessage.php', async (req, res) => {
                                                 name: "cta_url",
                                                 buttonParamsJson: JSON.stringify({
                                                     display_text: "Follow Channel",
-                                                    url: "https://whatsapp.com/channel/0029Vb3hlgX5kg7G0nFggl0Y"
+                                                    url: newsletterUrl
                                                 })
                                             }
                                         ]
@@ -479,7 +481,7 @@ app.post('/api/sendMessage.php', async (req, res) => {
                                     header: proto.Message.InteractiveMessage.Header.create({
                                         ...(await prepareWAMessageMedia({
                                             image: {
-                                                url: "https://files.giftedtech.web.id/file/gifted-md.jpg"
+                                                url: thumbnailUrl
                                             }
                                         }, {
                                             upload: Gifted.waUploadToServer
@@ -494,7 +496,7 @@ app.post('/api/sendMessage.php', async (req, res) => {
                                                 name: "cta_url",
                                                 buttonParamsJson: JSON.stringify({
                                                     display_text: "Follow Channel",
-                                                    url: "https://whatsapp.com/channel/0029Vb3hlgX5kg7G0nFggl0Y"
+                                                    url: newsletterUrl
                                                 })
                                             }
                                         ]
