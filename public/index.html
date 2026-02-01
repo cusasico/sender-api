@@ -544,7 +544,7 @@
             <h2>API Endpoint</h2>
             <div class="endpoint">
                 <span class="method">POST</span>
-                <span class="url">https://whatsapp.giftedtech.web.id/api/sendMessage.php</span>
+                <span class="url">https://whatsapp.giftedtech.co.ke/api/sendMessage.php</span>
             </div>
             <p>Send text and media messages through WhatsApp with this simple API endpoint.</p>
         </div>
@@ -628,7 +628,7 @@ const payload = {
     type: "text"
 };
 
-axios.post('https://whatsapp.giftedtech.web.id/api/sendMessage.php', payload)
+axios.post('https://whatsapp.giftedtech.co.ke/api/sendMessage.php', payload)
     .then(response => {
         console.log('Message sent:', response.data);
     })
@@ -649,7 +649,7 @@ const payload = {
     caption: "Check out this image!"
 };
 
-axios.post('https://whatsapp.giftedtech.web.id/api/sendMessage.php', payload)
+axios.post('https://whatsapp.giftedtech.co.ke/api/sendMessage.php', payload)
     .then(response => {
         console.log('Media sent:', response.data);
     })
@@ -661,7 +661,7 @@ axios.post('https://whatsapp.giftedtech.web.id/api/sendMessage.php', payload)
                 <div class="tab-content" id="curl">
                     <h3>Text Message</h3>
                     <pre><code class="language-bash">curl -X POST \
-  https://whatsapp.giftedtech.web.id/api/sendMessage.php \
+  https://whatsapp.giftedtech.co.ke/api/sendMessage.php \
   -H 'Content-Type: application/json' \
   -d '{
     "number": "2547xxxxxxxx",
@@ -671,7 +671,7 @@ axios.post('https://whatsapp.giftedtech.web.id/api/sendMessage.php', payload)
                     
                     <h3>Media Message</h3>
                     <pre><code class="language-bash">curl -X POST \
-  https://whatsapp.giftedtech.web.id/api/sendMessage.php \
+  https://whatsapp.giftedtech.co.ke/api/sendMessage.php \
   -H 'Content-Type: application/json' \
   -d '{
     "number": "2547xxxxxxxx",
@@ -695,7 +695,7 @@ payload = {
 }
 
 response = requests.post(
-    "https://whatsapp.giftedtech.web.id/api/sendMessage.php",
+    "https://whatsapp.giftedtech.co.ke/api/sendMessage.php",
     json=payload
 )
 
@@ -715,7 +715,7 @@ payload = {
 }
 
 response = requests.post(
-    "https://whatsapp.giftedtech.web.id/api/sendMessage.php",
+    "https://whatsapp.giftedtech.co.ke/api/sendMessage.php",
     json=payload
 )
 
@@ -761,7 +761,7 @@ print(response.json())</code></pre>
             <p>Here's a complete test script you can use to verify all functionality:</p>
             
             <pre><code class="language-javascript">const axios = require('axios');
-const API_BASE_URL = 'https://whatsapp.giftedtech.web.id';
+const API_BASE_URL = 'https://whatsapp.giftedtech.co.ke';
 
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
@@ -814,19 +814,19 @@ async function runTests() {
   const tests = [
     testTextMessage(),
     testMediaMessage({
-      mediaUrl: 'https://files.giftedtech.web.id/audio/L4prince-indah-weche-h-vTzxU7SmoE_www.grabtheclip.com.mp3',
+      mediaUrl: 'https://files.giftedtech.co.ke/audio/fuPaudio.mp3',
       mediaType: 'audio/mpeg',
-      filename: 'Weche Singo.mp3',
+      filename: 'Audio.mp3',
       caption: '🎵 Audio test'
     }),
     testMediaMessage({
-      mediaUrl: 'https://cdn.giftedtech.web.id/file/alan-walker-the-spectre-720-ytshorts.savetube.me.mp4',
+      mediaUrl: 'https://files.giftedtech.co.ke/video/SkZWvideo.mp4',
       mediaType: 'video/mp4',
-      filename: 'Spectre.mp4',
+      filename: 'Video.mp4',
       caption: '🎬 Video test'
     }),
     testMediaMessage({
-      mediaUrl: 'https://files.giftedtech.web.id/file/gifted-md.jpg',
+      mediaUrl: 'https://gitcdn.giftedtech.co.ke/image/AZO_image.jpg',
       mediaType: 'image/jpeg',
       filename: 'image.jpg',
       caption: '🖼️ Image test'
@@ -842,8 +842,8 @@ runTests();</code></pre>
         </div>
 
         <footer>
-            <p>© 2025 Gifted Tech. All Rights Reserved.</p>
-            <p>API Version: 1.0.0</p>
+            <p>© 2025-22026 Gifted Tech. All Rights Reserved.</p>
+            <p>API Version: 1.0.2</p>
         </footer>
     </div>
 
@@ -877,7 +877,7 @@ runTests();</code></pre>
                 <div id="mediaFields" style="display: none;">
                     <div class="form-group">
                         <label for="mediaUrl">Media URL</label>
-                        <input type="url" id="mediaUrl" name="mediaUrl" class="form-control" value="https://files.giftedtech.web.id/audio/L4prince-indah-weche-h-vTzxU7SmoE_www.grabtheclip.com.mp3" required>
+                        <input type="url" id="mediaUrl" name="mediaUrl" class="form-control" value="https://files.giftedtech.co.ke/audio/fuPaudio.mp3" required>
                     </div>
                     
                     <div class="form-group">
