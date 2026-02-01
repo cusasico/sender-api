@@ -139,23 +139,71 @@
             border-radius: 2px;
         }
 
+        .theme-container {
+            position: relative;
+        }
+
         .theme-toggle {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
             border: 1px solid var(--border-color);
             background: var(--bg-secondary);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
+            font-size: 0.9rem;
             transition: all 0.3s;
         }
 
         .theme-toggle:hover {
             transform: scale(1.05);
             box-shadow: var(--shadow);
+        }
+
+        .theme-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s;
+            z-index: 1001;
+            min-width: 120px;
+        }
+
+        .theme-dropdown.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .theme-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+        }
+
+        .theme-option:hover {
+            background: var(--bg-secondary);
+        }
+
+        .theme-option.active {
+            background: var(--accent);
+            color: white;
         }
 
         .mobile-menu-btn {
@@ -562,7 +610,14 @@
                 <a href="/playground.html">Playground</a>
                 <a href="/examples.html">Examples</a>
             </nav>
-            <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Theme">🌙</button>
+            <div class="theme-container">
+                <button class="theme-toggle" onclick="toggleThemeDropdown()" title="Theme">🌙</button>
+                <div class="theme-dropdown" id="themeDropdown">
+                    <div class="theme-option" onclick="setTheme('light')">☀️ Light</div>
+                    <div class="theme-option active" onclick="setTheme('dark')">🌙 Dark</div>
+                    <div class="theme-option" onclick="setTheme('system')">💻 System</div>
+                </div>
+            </div>
             <button class="mobile-menu-btn" onclick="toggleSidebar()">
                 <span></span>
                 <span></span>
@@ -731,20 +786,47 @@
     </footer>
 
     <script>
-        function toggleTheme() {
+        function toggleThemeDropdown() {
+            document.getElementById('themeDropdown').classList.toggle('open');
+        }
+
+        function setTheme(theme) {
             const html = document.documentElement;
             const btn = document.querySelector('.theme-toggle');
-            if (html.getAttribute('data-theme') === 'dark') {
+            const options = document.querySelectorAll('.theme-option');
+            
+            localStorage.setItem('theme', theme);
+            options.forEach(opt => opt.classList.remove('active'));
+            
+            if (theme === 'system') {
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (prefersDark) {
+                    html.setAttribute('data-theme', 'dark');
+                } else {
+                    html.removeAttribute('data-theme');
+                }
+                btn.textContent = '💻';
+                options[2].classList.add('active');
+            } else if (theme === 'light') {
                 html.removeAttribute('data-theme');
-                btn.textContent = '🌙';
-                localStorage.setItem('theme', 'light');
+                btn.textContent = '☀️';
+                options[0].classList.add('active');
             } else {
                 html.setAttribute('data-theme', 'dark');
-                btn.textContent = '☀️';
-                localStorage.setItem('theme', 'dark');
+                btn.textContent = '🌙';
+                options[1].classList.add('active');
             }
+            
+            document.getElementById('themeDropdown').classList.remove('open');
             initParticles();
         }
+
+        document.addEventListener('click', function(e) {
+            const container = document.querySelector('.theme-container');
+            if (container && !container.contains(e.target)) {
+                document.getElementById('themeDropdown').classList.remove('open');
+            }
+        });
 
         function toggleSidebar() {
             document.querySelector('.sidebar').classList.add('open');
@@ -817,14 +899,8 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'light') {
-                document.documentElement.removeAttribute('data-theme');
-                document.querySelector('.theme-toggle').textContent = '🌙';
-            } else {
-                document.querySelector('.theme-toggle').textContent = '☀️';
-            }
-            initParticles();
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            setTheme(savedTheme);
             checkStatus();
             setInterval(checkStatus, 10000);
         });
