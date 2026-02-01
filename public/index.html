@@ -511,6 +511,129 @@
             opacity: 1;
         }
 
+        .api-hero-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 28px;
+            max-width: 480px;
+            margin: 0 auto 40px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .api-hero-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .api-version {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #f97316;
+            margin: 0;
+        }
+
+        .live-badge {
+            background: #22c55e;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .base-url-label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .base-url-box {
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            border-radius: 10px;
+            padding: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .base-url-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: white;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            padding: 12px 16px;
+            min-width: 0;
+            cursor: pointer;
+        }
+
+        .base-url-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .base-url-copy-btn {
+            background: rgba(0, 0, 0, 0.2);
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            cursor: pointer;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .base-url-copy-btn:hover, .base-url-copy-btn:active {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .api-stats {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .api-stat {
+            display: flex;
+            justify-content: space-between;
+            flex: 1;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .stat-value {
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 768px) {
+            .api-hero-card {
+                margin: 0 0 30px;
+                padding: 20px;
+            }
+            .api-stats {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .base-url-input {
+                font-size: 0.8rem;
+            }
+        }
+
         .message-types-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -759,15 +882,34 @@
                 </div>
             </section>
 
-            <div class="card">
-                <h2>API Endpoint</h2>
-                <div class="endpoint-box">
-                    <span class="method-badge">POST</span>
-                    <input type="text" class="endpoint-url-input" id="endpointUrl" value="https://whatsapp.giftedtech.co.ke/api/sendMessage.php" readonly onclick="this.select(); document.execCommand('copy'); showCopyNotification();">
-                    <button class="copy-btn" onclick="copyEndpoint()" ontouchend="copyEndpoint(); event.preventDefault();" title="Copy URL">📋</button>
+            <div class="api-hero-card">
+                <div class="api-hero-header">
+                    <h2 class="api-version">API v1.0.0</h2>
+                    <span class="live-badge">LIVE</span>
                 </div>
-                <p style="color: var(--text-secondary);">Send text, media, and verification code messages through WhatsApp with this simple API endpoint.</p>
-                <div style="margin-top: 20px;">
+                <div class="api-hero-content">
+                    <p class="base-url-label">Base URL</p>
+                    <div class="base-url-box">
+                        <input type="text" class="base-url-input" id="endpointUrl" value="https://whatsapp.giftedtech.co.ke/api/sendMessage.php" readonly onclick="this.select(); document.execCommand('copy'); showCopyNotification();">
+                        <button class="base-url-copy-btn" onclick="copyEndpoint()" ontouchend="copyEndpoint(); event.preventDefault();" title="Copy URL">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="api-stats">
+                        <div class="api-stat">
+                            <span class="stat-label">Uptime:</span>
+                            <span class="stat-value" id="uptimeValue">99.9%</span>
+                        </div>
+                        <div class="api-stat">
+                            <span class="stat-label">Response Time:</span>
+                            <span class="stat-value" id="responseTimeValue">< 200ms</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 20px; text-align: center;">
                     <a href="./playground" class="btn">🚀 Try Playground</a>
                 </div>
             </div>
