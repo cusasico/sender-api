@@ -23,7 +23,7 @@ const express = require('express'),
       { loadSession, CustomStore, logger, handleIncomingMessages, saveMessage, handleMediaMessage } = require('./gift');
 
 const app = express();
-const PORT = process.env.PORT || 9000;
+const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 const sessionDir = path.join(__dirname, "gift", "session");
