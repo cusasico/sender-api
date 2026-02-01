@@ -40,4 +40,9 @@ Environment variables (can be set in config.js or as secrets):
 - `API_URL` - API URL for external references
 
 ## Recent Changes
+- Feb 2026: Fixed mobile touch handling across all pages (index.html, playground, examples)
+  - Replaced onclick handlers with proper touch event handling
+  - Added minimum 44px touch target sizes for buttons and interactive elements
+  - Enabled horizontal scrolling for code blocks on mobile
+  - Fixed theme toggle, menu button, and sidebar functionality on mobile
 - Feb 2026: Initial Replit setup, configured to bind to 0.0.0.0:5000

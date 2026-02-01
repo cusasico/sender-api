@@ -145,8 +145,8 @@
         }
 
         .theme-toggle {
-            width: 32px;
-            height: 32px;
+            width: 44px;
+            height: 44px;
             border-radius: 8px;
             border: 1px solid var(--border-color);
             background: var(--bg-secondary);
@@ -154,16 +154,25 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.9rem;
+            font-size: 1.1rem;
             transition: all 0.3s;
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
             user-select: none;
+            position: relative;
+            z-index: 1002;
         }
 
         .theme-toggle:hover, .theme-toggle:active {
             transform: scale(1.05);
             box-shadow: var(--shadow);
+        }
+
+        @media (max-width: 768px) {
+            .theme-toggle {
+                min-width: 44px;
+                min-height: 44px;
+            }
         }
 
         .theme-dropdown {
@@ -194,14 +203,15 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 10px 14px;
+            padding: 14px 16px;
             cursor: pointer;
             transition: background 0.2s;
             color: var(--text-primary);
-            font-size: 0.85rem;
+            font-size: 0.95rem;
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
             user-select: none;
+            min-height: 44px;
         }
 
         .theme-option:hover, .theme-option:active {
@@ -282,13 +292,16 @@
 
         .sidebar-nav a {
             display: block;
-            padding: 14px 16px;
+            padding: 16px 18px;
             color: var(--text-primary);
             text-decoration: none;
             font-weight: 500;
             border-radius: 10px;
             margin-bottom: 8px;
             transition: all 0.3s;
+            min-height: 44px;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
         .sidebar-nav a:hover, .sidebar-nav a.active {
@@ -300,8 +313,8 @@
             position: absolute;
             top: 20px;
             right: 20px;
-            width: 36px;
-            height: 36px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             border: none;
             background: var(--bg-secondary);
@@ -311,6 +324,8 @@
             align-items: center;
             justify-content: center;
             color: var(--text-primary);
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
         .main-content {
@@ -476,7 +491,9 @@
             border-radius: 12px;
             padding: 20px;
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
             font-size: 0.85rem;
+            touch-action: pan-x pan-y;
         }
 
         code { font-family: 'Courier New', monospace; }
@@ -495,9 +512,12 @@
             cursor: pointer;
             text-decoration: none;
             transition: all 0.3s;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            min-height: 44px;
         }
 
-        .btn:hover {
+        .btn:hover, .btn:active {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
         }
@@ -599,10 +619,20 @@
             .logo-text { font-size: 1.2rem; }
             .message-types-grid { grid-template-columns: 1fr; }
 
-            .params-table { display: block; overflow-x: auto; }
+            .params-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
             .params-table th, .params-table td {
                 padding: 8px 12px;
                 font-size: 0.85rem;
+            }
+
+            pre {
+                padding: 16px;
+                font-size: 0.8rem;
+            }
+
+            .card {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
             }
         }
     </style>
@@ -622,14 +652,14 @@
                 <a href="./examples">Examples</a>
             </nav>
             <div class="theme-container">
-                <button class="theme-toggle" onclick="toggleThemeDropdown()" title="Theme">🌙</button>
+                <button class="theme-toggle" id="themeToggle" title="Theme">🌙</button>
                 <div class="theme-dropdown" id="themeDropdown">
-                    <div class="theme-option" onclick="setTheme('light')">☀️ Light</div>
-                    <div class="theme-option active" onclick="setTheme('dark')">🌙 Dark</div>
-                    <div class="theme-option" onclick="setTheme('system')">💻 System</div>
+                    <div class="theme-option" data-theme="light">☀️ Light</div>
+                    <div class="theme-option active" data-theme="dark">🌙 Dark</div>
+                    <div class="theme-option" data-theme="system">💻 System</div>
                 </div>
             </div>
-            <button class="mobile-menu-btn" onclick="toggleSidebar()">
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -637,9 +667,9 @@
         </div>
     </header>
 
-    <div class="sidebar-overlay" onclick="closeSidebar()"></div>
-    <aside class="sidebar">
-        <button class="sidebar-close" onclick="closeSidebar()">✕</button>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <button class="sidebar-close" id="sidebarClose">✕</button>
         <div class="sidebar-header">
             <img src="https://gitcdn.giftedtech.co.ke/image/AZO_image.jpg" alt="WaSender API" class="logo-img">
             <span class="logo-text">WASENDER API</span>
@@ -840,14 +870,18 @@
         });
 
         function toggleSidebar() {
-            document.querySelector('.sidebar').classList.add('open');
-            document.querySelector('.sidebar-overlay').classList.add('open');
+            var sidebar = document.getElementById('sidebar');
+            var overlay = document.getElementById('sidebarOverlay');
+            if (sidebar) sidebar.classList.add('open');
+            if (overlay) overlay.classList.add('open');
             document.body.style.overflow = 'hidden';
         }
 
         function closeSidebar() {
-            document.querySelector('.sidebar').classList.remove('open');
-            document.querySelector('.sidebar-overlay').classList.remove('open');
+            var sidebar = document.getElementById('sidebar');
+            var overlay = document.getElementById('sidebarOverlay');
+            if (sidebar) sidebar.classList.remove('open');
+            if (overlay) overlay.classList.remove('open');
             document.body.style.overflow = '';
         }
 
@@ -914,48 +948,62 @@
             setTheme(savedTheme);
             checkStatus();
             setInterval(checkStatus, 10000);
+        });
+
+        function handleClick(element, callback) {
+            let touchMoved = false;
             
-            // Mobile touch event listeners
-            const themeToggle = document.querySelector('.theme-toggle');
-            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-            const sidebarOverlay = document.querySelector('.sidebar-overlay');
-            const sidebarClose = document.querySelector('.sidebar-close');
-            const themeOptions = document.querySelectorAll('.theme-option');
+            element.addEventListener('touchstart', function() {
+                touchMoved = false;
+            }, { passive: true });
             
-            if (themeToggle) {
-                themeToggle.addEventListener('touchend', function(e) {
+            element.addEventListener('touchmove', function() {
+                touchMoved = true;
+            }, { passive: true });
+            
+            element.addEventListener('touchend', function(e) {
+                if (!touchMoved) {
                     e.preventDefault();
-                    toggleThemeDropdown();
-                });
+                    callback(e);
+                }
+            });
+            
+            element.addEventListener('click', function(e) {
+                if (e.pointerType !== 'touch') {
+                    callback(e);
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const sidebarClose = document.getElementById('sidebarClose');
+            const themeOptions = document.querySelectorAll('.theme-option');
+
+            if (themeToggle) {
+                handleClick(themeToggle, toggleThemeDropdown);
             }
             
             if (mobileMenuBtn) {
-                mobileMenuBtn.addEventListener('touchend', function(e) {
-                    e.preventDefault();
-                    toggleSidebar();
-                });
+                handleClick(mobileMenuBtn, toggleSidebar);
             }
             
             if (sidebarOverlay) {
-                sidebarOverlay.addEventListener('touchend', function(e) {
-                    e.preventDefault();
-                    closeSidebar();
-                });
+                handleClick(sidebarOverlay, closeSidebar);
             }
             
             if (sidebarClose) {
-                sidebarClose.addEventListener('touchend', function(e) {
-                    e.preventDefault();
-                    closeSidebar();
-                });
+                handleClick(sidebarClose, closeSidebar);
             }
             
-            themeOptions.forEach(function(option, index) {
-                option.addEventListener('touchend', function(e) {
-                    e.preventDefault();
-                    if (index === 0) setTheme('light');
-                    else if (index === 1) setTheme('dark');
-                    else setTheme('system');
+            themeOptions.forEach(function(option) {
+                handleClick(option, function() {
+                    const themeName = option.getAttribute('data-theme');
+                    if (themeName) {
+                        setTheme(themeName);
+                    }
                 });
             });
         });
