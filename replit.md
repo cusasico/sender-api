@@ -4,12 +4,21 @@
 WhatsApp API server using gifted-baileys and Express. Provides an API for sending WhatsApp messages with various types including text, media, and verification codes with interactive buttons.
 
 ## Project Structure
-- `index.js` - Main Express server and WhatsApp connection logic with stability improvements
+- `index.js` - Main Express server with clean, modular architecture
 - `config.js` - Configuration with environment variables
-- `gift/` - Helper modules for session management and message handling
-- `public/index.html` - API documentation page with professional design
-- `public/playground.html` - Interactive API playground for testing
-- `public/examples.html` - Code examples in cURL, JavaScript, and Python
+- `gift/` - Core modules directory:
+  - `index.js` - Main exports, re-exports all modules
+  - `connection.js` - ConnectionManager class for connection lifecycle
+  - `session.js` - Session loading and validation
+  - `store.js` - CustomStore class for message/chat storage
+  - `messages.js` - Message templates and incoming message handling
+  - `media.js` - Media detection and sending logic
+  - `api.js` - API request validation and processing
+  - `logger.js` - Logging utilities
+- `public/` - Frontend files:
+  - `index.html` - API documentation page
+  - `playground.html` - Interactive API playground
+  - `examples.html` - Code examples (cURL, JavaScript, Python)
 - `.env` - Environment variables (SESSION_ID for WhatsApp auth)
 
 ## Setup
@@ -63,7 +72,16 @@ Environment variables in `.env`:
 - Only requires: mediaUrl (required), name (optional for documents), caption (optional)
 - Supports images, videos, audio, documents (PDF, DOCX, etc.)
 
+## Architecture
+- **ConnectionManager**: Handles connection lifecycle, reconnection logic, timeouts
+- **CustomStore**: In-memory message/chat storage with automatic cleanup
+- **Message Templates**: Centralized templates for verification code messages
+- **Media Handler**: Auto-detects MIME types from headers, URL, or filename
+- **API Layer**: Request validation, retry logic, response formatting
+
 ## Recent Changes
+- 2026-02-01: Major refactor - modular architecture with separate gift/ modules
+- 2026-02-01: Added theme dropdown with Light/Dark/System options
 - 2026-02-01: Added examples page with code snippets for cURL, JavaScript, Python
 - 2026-02-01: Made dark theme the default for new users
 - 2026-02-01: Improved media handling with auto MIME type detection
