@@ -69,11 +69,6 @@
             pointer-events: none !important;
         }
 
-        @media (max-width: 768px) {
-            #particles-js {
-                display: none !important;
-            }
-        }
 
         .header {
             position: fixed;
@@ -468,6 +463,54 @@
             word-break: break-all;
         }
 
+        .endpoint-url-input {
+            font-family: 'Courier New', monospace;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            background: transparent;
+            border: none;
+            outline: none;
+            flex: 1;
+            min-width: 0;
+            cursor: pointer;
+            word-break: break-all;
+        }
+
+        .copy-btn {
+            background: var(--accent-gradient);
+            border: none;
+            border-radius: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .copy-btn:hover, .copy-btn:active {
+            transform: scale(1.1);
+        }
+
+        .copy-notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent-gradient);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .copy-notification.show {
+            opacity: 1;
+        }
+
         .message-types-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -662,6 +705,7 @@
 </head>
 <body>
     <div id="particles-js"></div>
+    <div class="copy-notification" id="copyNotification">URL Copied!</div>
 
     <header class="header">
         <div class="header-left">
@@ -719,7 +763,8 @@
                 <h2>API Endpoint</h2>
                 <div class="endpoint-box">
                     <span class="method-badge">POST</span>
-                    <span class="endpoint-url">https://whatsapp.giftedtech.co.ke/api/sendMessage.php</span>
+                    <input type="text" class="endpoint-url-input" id="endpointUrl" value="https://whatsapp.giftedtech.co.ke/api/sendMessage.php" readonly onclick="this.select(); document.execCommand('copy'); showCopyNotification();">
+                    <button class="copy-btn" onclick="copyEndpoint()" ontouchend="copyEndpoint(); event.preventDefault();" title="Copy URL">📋</button>
                 </div>
                 <p style="color: var(--text-secondary);">Send text, media, and verification code messages through WhatsApp with this simple API endpoint.</p>
                 <div style="margin-top: 20px;">
@@ -850,6 +895,26 @@
     </footer>
 
     <script>
+        function copyEndpoint() {
+            var input = document.getElementById('endpointUrl');
+            input.select();
+            input.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(input.value).then(function() {
+                showCopyNotification();
+            }).catch(function() {
+                document.execCommand('copy');
+                showCopyNotification();
+            });
+        }
+
+        function showCopyNotification() {
+            var notification = document.getElementById('copyNotification');
+            notification.classList.add('show');
+            setTimeout(function() {
+                notification.classList.remove('show');
+            }, 2000);
+        }
+
         function toggleThemeDropdown() {
             document.getElementById('themeDropdown').classList.toggle('open');
         }
