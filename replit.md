@@ -7,7 +7,8 @@ WhatsApp API server using gifted-baileys and Express. Provides an API for sendin
 - `index.js` - Main Express server and WhatsApp connection logic with stability improvements
 - `config.js` - Configuration with environment variables
 - `gift/` - Helper modules for session management and message handling
-- `public/index.html` - API documentation and interactive playground
+- `public/index.html` - API documentation page with professional design
+- `public/playground.html` - Interactive API playground for testing
 - `.env` - Environment variables (SESSION_ID for WhatsApp auth)
 
 ## Setup
@@ -19,7 +20,8 @@ WhatsApp API server using gifted-baileys and Express. Provides an API for sendin
 - `POST /api/sendMessage.php` - Send WhatsApp messages
 - `GET /api/status` - Connection status endpoint
 - `GET /health` - Health check endpoint
-- `GET /` - API documentation and playground
+- `GET /` - API documentation page
+- `GET /playground.html` - Interactive API testing playground
 
 ## Message Types
 - `text` - Simple text message with channel button
@@ -44,7 +46,17 @@ Environment variables in `.env`:
 - MODE - Bot mode (private/public/inbox/groups)
 - API_URL - API base URL
 
+## Frontend Features
+- Header with rounded logo and WASENDER API gradient branding
+- Mobile responsive sidebar navigation
+- Particles.js animated background
+- Dark/light theme toggle
+- Animated heartbeat footer with Gifted Tech link
+- Real-time connection status indicator
+- API domain: https://whatsapp.giftedtech.co.ke
+
 ## Recent Changes
+- 2026-02-01: Complete frontend redesign with separate documentation and playground pages
+- 2026-02-01: Added header with logo, mobile sidebar, particles.js background
 - 2026-02-01: Fixed connection stability issues with better state management
-- 2026-02-01: Added verification code playground to frontend
 - 2026-02-01: Added /api/status endpoint for connection monitoring

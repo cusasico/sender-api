@@ -3,18 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WaSender API - WhatsApp Messaging API</title>
-    <meta name="description" content="Powerful WhatsApp Messaging API for Developers. Send text, media, and verification codes through WhatsApp.">
-    <meta name="keywords" content="WhatsApp API, Messaging API, OTP, Verification Codes, WaSender">
-    <meta name="author" content="Gifted Tech">
-    <meta property="og:title" content="WaSender API - WhatsApp Messaging API">
-    <meta property="og:description" content="Powerful WhatsApp Messaging API for Developers. Send text, media, and verification codes through WhatsApp.">
+    <title>API Playground - WaSender API</title>
+    <meta name="description" content="Test the WaSender WhatsApp API with our interactive playground.">
+    <meta property="og:title" content="API Playground - WaSender API">
+    <meta property="og:description" content="Test the WaSender WhatsApp API with our interactive playground.">
     <meta property="og:image" content="https://gitcdn.giftedtech.co.ke/image/AZO_image.jpg">
-    <meta property="og:url" content="https://whatsapp.giftedtech.co.ke">
-    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://whatsapp.giftedtech.co.ke/playground.html">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="WaSender API - WhatsApp Messaging API">
-    <meta name="twitter:description" content="Powerful WhatsApp Messaging API for Developers.">
     <meta name="twitter:image" content="https://gitcdn.giftedtech.co.ke/image/AZO_image.jpg">
     <link rel="icon" type="image/jpeg" href="https://gitcdn.giftedtech.co.ke/image/AZO_image.jpg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -33,6 +28,8 @@
             --accent-color: #667eea;
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --success: #22c55e;
+            --error: #ef4444;
         }
 
         [data-theme="dark"] {
@@ -261,14 +258,14 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 800px;
             margin: 0 auto;
             padding: 0 24px;
         }
 
-        .hero {
+        .page-title {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 40px;
             animation: fadeInUp 0.6s ease;
         }
 
@@ -277,21 +274,18 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .hero h1 {
-            font-size: 2.5rem;
+        .page-title h1 {
+            font-size: 2rem;
             font-weight: 800;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             background: var(--accent-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
-        .hero p {
-            font-size: 1.125rem;
+        .page-title p {
             color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto 24px;
         }
 
         .status-badge {
@@ -305,6 +299,7 @@
             font-size: 0.875rem;
             font-weight: 500;
             box-shadow: var(--shadow);
+            margin-top: 16px;
         }
 
         .status-dot {
@@ -332,97 +327,92 @@
             animation: fadeInUp 0.6s ease;
         }
 
-        .card h2 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 16px;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .form-group {
+            margin-bottom: 20px;
         }
 
-        .endpoint-box {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-        }
-
-        .method-badge {
-            padding: 6px 14px;
-            background: var(--accent-gradient);
-            color: white;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.875rem;
-        }
-
-        .endpoint-url {
-            font-family: 'Courier New', monospace;
-            color: var(--text-primary);
-            font-size: 0.9rem;
-            word-break: break-all;
-        }
-
-        .message-types-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-        }
-
-        .type-card {
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 20px;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .type-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .type-card h3 {
-            font-size: 1.125rem;
+        .form-group label {
+            display: block;
             font-weight: 600;
             margin-bottom: 8px;
-            color: var(--accent-color);
+            color: var(--text-primary);
         }
 
-        .type-card p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-bottom: 12px;
-        }
-
-        .type-card code {
-            display: inline-block;
-            padding: 4px 10px;
-            background: var(--bg-card);
-            border-radius: 6px;
-            font-size: 0.8rem;
-            color: var(--accent-color);
-            font-family: 'Courier New', monospace;
-        }
-
-        pre {
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
             background: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 20px;
-            overflow-x: auto;
-            font-size: 0.85rem;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
 
-        code { font-family: 'Courier New', monospace; }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+
+        .form-control::placeholder {
+            color: var(--text-secondary);
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .type-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .type-btn {
+            padding: 12px 8px;
+            text-align: center;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: var(--bg-secondary);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .type-btn:hover {
+            border-color: var(--accent-color);
+        }
+
+        .type-btn.active {
+            border-color: var(--accent-color);
+            background: rgba(102, 126, 234, 0.1);
+            color: var(--accent-color);
+        }
+
+        .type-btn .icon {
+            display: block;
+            font-size: 1.25rem;
+            margin-bottom: 4px;
+        }
+
+        .dynamic-fields {
+            display: none;
+        }
+
+        .dynamic-fields.active {
+            display: block;
+            animation: fadeInUp 0.3s ease;
+        }
 
         .btn {
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             padding: 14px 28px;
             background: var(--accent-gradient);
@@ -434,6 +424,7 @@
             cursor: pointer;
             text-decoration: none;
             transition: all 0.3s;
+            width: 100%;
         }
 
         .btn:hover {
@@ -441,36 +432,63 @@
             box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
         }
 
-        .params-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
         }
 
-        .params-table th, .params-table td {
-            padding: 12px 16px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
         }
 
-        .params-table th {
-            background: var(--accent-gradient);
-            color: white;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .response-box {
+            margin-top: 24px;
+            padding: 20px;
+            border-radius: 12px;
+            display: none;
+        }
+
+        .response-box.success {
+            display: block;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid var(--success);
+        }
+
+        .response-box.error {
+            display: block;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--error);
+        }
+
+        .response-box pre {
+            background: var(--bg-secondary);
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .response-title {
             font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .params-table tr:hover { background: var(--bg-secondary); }
-
-        .badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .badge.required { background: #ef4444; color: white; }
-        .badge.optional { background: #f59e0b; color: white; }
+        .response-box.success .response-title { color: var(--success); }
+        .response-box.error .response-title { color: var(--error); }
 
         .footer {
             position: fixed;
@@ -531,16 +549,18 @@
             .sidebar { display: block; }
             .sidebar-overlay { display: block; }
 
-            .hero h1 { font-size: 1.75rem; }
-            .hero p { font-size: 1rem; }
+            .page-title h1 { font-size: 1.5rem; }
             .card { padding: 20px; }
             .logo-text { font-size: 1.2rem; }
-            .message-types-grid { grid-template-columns: 1fr; }
 
-            .params-table { display: block; overflow-x: auto; }
-            .params-table th, .params-table td {
-                padding: 8px 12px;
-                font-size: 0.85rem;
+            .type-selector {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .type-selector {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -555,8 +575,8 @@
         </div>
         <div class="header-right">
             <nav class="nav-links">
-                <a href="/" class="active">Documentation</a>
-                <a href="/playground.html">Playground</a>
+                <a href="/">Documentation</a>
+                <a href="/playground.html" class="active">Playground</a>
             </nav>
             <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Theme">🌙</button>
             <button class="mobile-menu-btn" onclick="toggleSidebar()">
@@ -575,16 +595,16 @@
             <span class="logo-text">WASENDER API</span>
         </div>
         <nav class="sidebar-nav">
-            <a href="/" class="active">Documentation</a>
-            <a href="/playground.html">Playground</a>
+            <a href="/">Documentation</a>
+            <a href="/playground.html" class="active">Playground</a>
         </nav>
     </aside>
 
     <main class="main-content">
         <div class="container">
-            <section class="hero">
-                <h1>Gifted WhatsApp Instance API</h1>
-                <p>Powerful WhatsApp Messaging API for Developers. Send text messages, media files, and verification codes with interactive buttons.</p>
+            <section class="page-title">
+                <h1>🚀 API Playground</h1>
+                <p>Test the WaSender API by sending real messages</p>
                 <div class="status-badge">
                     <span class="status-dot" id="statusDot"></span>
                     <span id="statusText">Checking...</span>
@@ -592,130 +612,78 @@
             </section>
 
             <div class="card">
-                <h2>API Endpoint</h2>
-                <div class="endpoint-box">
-                    <span class="method-badge">POST</span>
-                    <span class="endpoint-url">https://whatsapp.giftedtech.co.ke/api/sendMessage.php</span>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="text" class="form-control" id="phoneNumber" placeholder="2547XXXXXXXX">
                 </div>
-                <p style="color: var(--text-secondary);">Send text, media, and verification code messages through WhatsApp with this simple API endpoint.</p>
-                <div style="margin-top: 20px;">
-                    <a href="/playground.html" class="btn">🚀 Try Playground</a>
-                </div>
-            </div>
 
-            <div class="card">
-                <h2>Message Types</h2>
-                <div class="message-types-grid">
-                    <div class="type-card">
-                        <h3>📝 Text Message</h3>
-                        <p>Send simple text messages with optional channel button.</p>
-                        <code>type: "text"</code>
-                    </div>
-                    <div class="type-card">
-                        <h3>📎 Media Message</h3>
-                        <p>Send images, videos, audio, or documents with captions.</p>
-                        <code>type: "media"</code>
-                    </div>
-                    <div class="type-card">
-                        <h3>🔐 Signup Code</h3>
-                        <p>Send signup verification codes with copy button.</p>
-                        <code>type: "sendSignupCode"</code>
-                    </div>
-                    <div class="type-card">
-                        <h3>🔄 Reset Code</h3>
-                        <p>Send password reset codes with security warning.</p>
-                        <code>type: "sendResetCode"</code>
-                    </div>
-                    <div class="type-card">
-                        <h3>📨 Resend Code</h3>
-                        <p>Resend verification codes to users.</p>
-                        <code>type: "sendResendCode"</code>
-                    </div>
-                    <div class="type-card">
-                        <h3>⚠️ Delete Code</h3>
-                        <p>Send account deletion verification codes.</p>
-                        <code>type: "sendDeleteCode"</code>
+                <div class="form-group">
+                    <label>Message Type</label>
+                    <div class="type-selector">
+                        <div class="type-btn active" data-type="text">
+                            <span class="icon">📝</span>
+                            Text
+                        </div>
+                        <div class="type-btn" data-type="media">
+                            <span class="icon">📎</span>
+                            Media
+                        </div>
+                        <div class="type-btn" data-type="sendSignupCode">
+                            <span class="icon">🔐</span>
+                            Signup Code
+                        </div>
+                        <div class="type-btn" data-type="sendResetCode">
+                            <span class="icon">🔄</span>
+                            Reset Code
+                        </div>
+                        <div class="type-btn" data-type="sendResendCode">
+                            <span class="icon">📨</span>
+                            Resend Code
+                        </div>
+                        <div class="type-btn" data-type="sendDeleteCode">
+                            <span class="icon">⚠️</span>
+                            Delete Code
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="card">
-                <h2>Request Parameters</h2>
-                <table class="params-table">
-                    <thead>
-                        <tr>
-                            <th>Parameter</th>
-                            <th>Type</th>
-                            <th>Required</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><code>number</code></td>
-                            <td>String</td>
-                            <td><span class="badge required">Required</span></td>
-                            <td>Recipient's phone number with country code</td>
-                        </tr>
-                        <tr>
-                            <td><code>type</code></td>
-                            <td>String</td>
-                            <td><span class="badge required">Required</span></td>
-                            <td>Message type (text, media, sendSignupCode, etc.)</td>
-                        </tr>
-                        <tr>
-                            <td><code>message</code></td>
-                            <td>String</td>
-                            <td><span class="badge optional">For text</span></td>
-                            <td>The text message content</td>
-                        </tr>
-                        <tr>
-                            <td><code>username</code></td>
-                            <td>String</td>
-                            <td><span class="badge optional">For codes</span></td>
-                            <td>Username for verification messages</td>
-                        </tr>
-                        <tr>
-                            <td><code>code</code></td>
-                            <td>String</td>
-                            <td><span class="badge optional">For codes</span></td>
-                            <td>The verification code</td>
-                        </tr>
-                        <tr>
-                            <td><code>mediaUrl</code></td>
-                            <td>String</td>
-                            <td><span class="badge optional">For media</span></td>
-                            <td>URL of the media file</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                <div id="textFields" class="dynamic-fields active">
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea class="form-control" id="message" placeholder="Enter your message..."></textarea>
+                    </div>
+                </div>
 
-            <div class="card">
-                <h2>Request Examples</h2>
-                <h3 style="color: var(--accent-color); margin-bottom: 12px;">Text Message</h3>
-                <pre><code>{
-    "number": "2547XXXXXXXX",
-    "type": "text",
-    "message": "Hello from WaSender API!"
-}</code></pre>
+                <div id="mediaFields" class="dynamic-fields">
+                    <div class="form-group">
+                        <label>Media URL</label>
+                        <input type="text" class="form-control" id="mediaUrl" placeholder="https://example.com/image.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label>Caption (optional)</label>
+                        <input type="text" class="form-control" id="caption" placeholder="Image caption...">
+                    </div>
+                </div>
 
-                <h3 style="color: var(--accent-color); margin: 24px 0 12px;">Verification Code</h3>
-                <pre><code>{
-    "number": "2547XXXXXXXX",
-    "type": "sendSignupCode",
-    "username": "JohnDoe",
-    "code": "123456"
-}</code></pre>
-            </div>
+                <div id="codeFields" class="dynamic-fields">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" class="form-control" id="username" placeholder="JohnDoe">
+                    </div>
+                    <div class="form-group">
+                        <label>Verification Code</label>
+                        <input type="text" class="form-control" id="code" placeholder="123456">
+                    </div>
+                </div>
 
-            <div class="card">
-                <h2>Response Format</h2>
-                <pre><code>{
-    "status": 200,
-    "message": "Message sent successfully",
-    "to": "2547XXXXXXXX@s.whatsapp.net"
-}</code></pre>
+                <button class="btn" id="sendBtn" onclick="sendMessage()">
+                    <span id="btnText">Send Message</span>
+                </button>
+
+                <div class="response-box" id="responseBox">
+                    <div class="response-title" id="responseTitle"></div>
+                    <pre id="responseContent"></pre>
+                </div>
             </div>
         </div>
     </main>
@@ -726,6 +694,8 @@
     </footer>
 
     <script>
+        let currentType = 'text';
+
         function toggleTheme() {
             const html = document.documentElement;
             const btn = document.querySelector('.theme-toggle');
@@ -751,6 +721,93 @@
             document.querySelector('.sidebar').classList.remove('open');
             document.querySelector('.sidebar-overlay').classList.remove('open');
             document.body.style.overflow = '';
+        }
+
+        document.querySelectorAll('.type-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentType = this.dataset.type;
+                updateFields();
+            });
+        });
+
+        function updateFields() {
+            document.getElementById('textFields').classList.remove('active');
+            document.getElementById('mediaFields').classList.remove('active');
+            document.getElementById('codeFields').classList.remove('active');
+
+            if (currentType === 'text') {
+                document.getElementById('textFields').classList.add('active');
+            } else if (currentType === 'media') {
+                document.getElementById('mediaFields').classList.add('active');
+            } else {
+                document.getElementById('codeFields').classList.add('active');
+            }
+        }
+
+        async function sendMessage() {
+            const phone = document.getElementById('phoneNumber').value.trim();
+            if (!phone) {
+                showResponse(false, { error: 'Phone number is required' });
+                return;
+            }
+
+            const payload = {
+                number: phone,
+                type: currentType
+            };
+
+            if (currentType === 'text') {
+                const message = document.getElementById('message').value.trim();
+                if (!message) {
+                    showResponse(false, { error: 'Message is required for text type' });
+                    return;
+                }
+                payload.message = message;
+            } else if (currentType === 'media') {
+                payload.mediaUrl = document.getElementById('mediaUrl').value.trim();
+                payload.caption = document.getElementById('caption').value.trim();
+            } else {
+                const username = document.getElementById('username').value.trim();
+                const code = document.getElementById('code').value.trim();
+                if (!username || !code) {
+                    showResponse(false, { error: 'Username and code are required for verification types' });
+                    return;
+                }
+                payload.username = username;
+                payload.code = code;
+            }
+
+            const btn = document.getElementById('sendBtn');
+            const btnText = document.getElementById('btnText');
+            btn.disabled = true;
+            btnText.innerHTML = '<div class="spinner"></div> Sending...';
+
+            try {
+                const res = await fetch('/api/sendMessage.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                showResponse(data.status === 200, data);
+            } catch (e) {
+                showResponse(false, { error: e.message });
+            } finally {
+                btn.disabled = false;
+                btnText.textContent = 'Send Message';
+            }
+        }
+
+        function showResponse(success, data) {
+            const box = document.getElementById('responseBox');
+            const title = document.getElementById('responseTitle');
+            const content = document.getElementById('responseContent');
+
+            box.className = 'response-box ' + (success ? 'success' : 'error');
+            title.innerHTML = success ? '✅ Success' : '❌ Error';
+            content.textContent = JSON.stringify(data, null, 2);
         }
 
         async function checkStatus() {
