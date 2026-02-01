@@ -19,7 +19,7 @@ const express = require('express'),
       { THUMBNAIL: thumbnailUrl,
         NEWSLETTER_JID: newsletterJid,
         NEWSLETTER_URL: newsletterUrl,
-        BOT_FOOTER: botFooter } = config,
+        FOOTER: botFooter } = config,
       { loadSession, CustomStore, logger, handleIncomingMessages, saveMessage, handleMediaMessage } = require('./gift');
 
 const app = express();
