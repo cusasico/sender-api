@@ -119,6 +119,12 @@
             border-radius: 3px;
         }
 
+        h3 {
+            font-size: 1.3rem;
+            margin: 1.5rem 0 1rem;
+            color: var(--primary);
+        }
+
         p {
             margin-bottom: 1.5rem;
         }
@@ -310,7 +316,6 @@
             color: var(--text);
         }
 
-        /* Modal styles */
         .modal {
             display: none;
             position: fixed;
@@ -329,7 +334,7 @@
             padding: 2rem;
             border-radius: 10px;
             width: 90%;
-            max-width: 600px;
+            max-width: 700px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             animation: modalFadeIn 0.3s ease;
         }
@@ -382,6 +387,7 @@
             border-radius: 5px;
             background-color: var(--bg);
             color: var(--text);
+            font-family: 'Poppins', sans-serif;
         }
 
         .form-control:focus {
@@ -396,6 +402,7 @@
             cursor: pointer;
             font-weight: 500;
             transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
         }
 
         .btn-primary {
@@ -413,24 +420,29 @@
         }
 
         .message-type-selector {
-            display: flex;
-            gap: 1rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.5rem;
             margin-bottom: 1.5rem;
         }
 
         .message-type-btn {
-            flex: 1;
-            padding: 1rem;
+            padding: 0.75rem 0.5rem;
             text-align: center;
             border: 2px solid var(--border);
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s;
+            font-size: 0.85rem;
         }
 
         .message-type-btn.active {
             border-color: var(--primary);
             background-color: rgba(108, 92, 231, 0.1);
+        }
+
+        .message-type-btn:hover {
+            border-color: var(--secondary);
         }
 
         .response-container {
@@ -440,6 +452,11 @@
             background-color: rgba(0, 184, 148, 0.1);
             border-left: 4px solid var(--success);
             display: none;
+        }
+
+        .response-container.error {
+            background-color: rgba(214, 48, 49, 0.1);
+            border-left-color: var(--error);
         }
 
         .loading {
@@ -461,6 +478,58 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status-indicator.connected {
+            background: rgba(0, 184, 148, 0.2);
+            color: var(--success);
+        }
+
+        .status-indicator.disconnected {
+            background: rgba(214, 48, 49, 0.2);
+            color: var(--error);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: blink 1.5s infinite;
+        }
+
+        .status-dot.connected {
+            background: var(--success);
+        }
+
+        .status-dot.disconnected {
+            background: var(--error);
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .code-type-info {
+            background: rgba(108, 92, 231, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .code-type-info h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
         }
 
         @media (max-width: 768px) {
@@ -509,11 +578,15 @@
                 padding: 1.5rem;
                 width: 95%;
             }
+
+            .message-type-selector {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         @media (max-width: 480px) {
             .message-type-selector {
-                flex-direction: column;
+                grid-template-columns: 1fr;
             }
 
             .params-table {
@@ -531,6 +604,10 @@
                 <p>Powerful WhatsApp Messaging API for Developers. Can be Used for Services like Sending Auth Messages, OTPs, Documents, Files etc</p>
             </div>
             <div class="header-actions">
+                <div class="status-indicator disconnected" id="statusIndicator">
+                    <span class="status-dot disconnected" id="statusDot"></span>
+                    <span id="statusText">Checking...</span>
+                </div>
                 <button class="playground-btn" id="playgroundBtn">
                     <span>🚀</span> <span>Playground</span>
                 </button>
@@ -544,9 +621,44 @@
             <h2>API Endpoint</h2>
             <div class="endpoint">
                 <span class="method">POST</span>
-                <span class="url">https://whatsapp.giftedtech.co.ke/api/sendMessage.php</span>
+                <span class="url">/api/sendMessage.php</span>
             </div>
-            <p>Send text and media messages through WhatsApp with this simple API endpoint.</p>
+            <p>Send text, media, and verification code messages through WhatsApp with this simple API endpoint.</p>
+        </div>
+
+        <div class="card">
+            <h2>Message Types</h2>
+            <p>The API supports different message types for various use cases:</p>
+            
+            <div class="code-type-info">
+                <h4>text</h4>
+                <p>Send a simple text message with a channel button.</p>
+            </div>
+            
+            <div class="code-type-info">
+                <h4>media</h4>
+                <p>Send media files (images, videos, audio, documents) with optional caption.</p>
+            </div>
+            
+            <div class="code-type-info">
+                <h4>sendSignupCode</h4>
+                <p>Send a signup verification code with a copy button. Used for new user registration.</p>
+            </div>
+            
+            <div class="code-type-info">
+                <h4>sendResetCode</h4>
+                <p>Send a password reset verification code. Includes security warning about unauthorized access.</p>
+            </div>
+            
+            <div class="code-type-info">
+                <h4>sendResendCode</h4>
+                <p>Resend a verification code when the user requests a new code.</p>
+            </div>
+            
+            <div class="code-type-info">
+                <h4>sendDeleteCode</h4>
+                <p>Send an account deletion verification code. Includes warnings about permanent data loss.</p>
+            </div>
         </div>
 
         <div class="card">
@@ -565,43 +677,55 @@
                         <td><code>number</code></td>
                         <td>String</td>
                         <td><span class="badge required">Required</span></td>
-                        <td>Recipient's phone number with country code (e.g., "2547xxxxxxxx" or "2547xxxxxxxx@s.whatsapp.net"). Can be multiple numbers separated by comma(e.g., "2547xxxxxxxx,2547zzzzzzzz" or "2547xxxxxxxx@s.whatsapp.net,2547zzzzzz@s.whatsapp.net")</td>
+                        <td>Recipient's phone number with country code (e.g., "2547xxxxxxxx"). Multiple numbers separated by comma.</td>
                     </tr>
                     <tr>
                         <td><code>message</code></td>
                         <td>String</td>
-                        <td><span class="badge required">Required for text</span></td>
-                        <td>The text message to send (required when type is "text")</td>
+                        <td><span class="badge required">Required</span></td>
+                        <td>The text message or a placeholder for verification codes.</td>
                     </tr>
                     <tr>
                         <td><code>type</code></td>
                         <td>String</td>
                         <td><span class="badge required">Required</span></td>
-                        <td>Type of message: "text" or "media"</td>
+                        <td>Message type: "text", "media", "sendSignupCode", "sendResetCode", "sendResendCode", "sendDeleteCode"</td>
+                    </tr>
+                    <tr>
+                        <td><code>username</code></td>
+                        <td>String</td>
+                        <td><span class="badge optional">For codes</span></td>
+                        <td>Username to include in verification messages.</td>
+                    </tr>
+                    <tr>
+                        <td><code>code</code></td>
+                        <td>String</td>
+                        <td><span class="badge optional">For codes</span></td>
+                        <td>The verification code to be copied by the user.</td>
                     </tr>
                     <tr>
                         <td><code>mediaUrl</code></td>
                         <td>String</td>
-                        <td><span class="badge required">Required for media</span></td>
-                        <td>URL of the media file to send (required when type is "media")</td>
+                        <td><span class="badge optional">For media</span></td>
+                        <td>URL of the media file to send.</td>
                     </tr>
                     <tr>
                         <td><code>mediaType</code></td>
                         <td>String</td>
                         <td><span class="badge optional">Optional</span></td>
-                        <td>MIME type of the media (e.g., "image/jpeg", "video/mp4"). If not provided, will be detected automatically.</td>
+                        <td>MIME type of the media (e.g., "image/jpeg", "video/mp4").</td>
                     </tr>
                     <tr>
                         <td><code>filename</code></td>
                         <td>String</td>
                         <td><span class="badge optional">Optional</span></td>
-                        <td>Filename for the media. If not provided, will be generated automatically.</td>
+                        <td>Filename for the media file.</td>
                     </tr>
                     <tr>
                         <td><code>caption</code></td>
                         <td>String</td>
                         <td><span class="badge optional">Optional</span></td>
-                        <td>Caption for media messages</td>
+                        <td>Caption for media messages.</td>
                     </tr>
                 </tbody>
             </table>
@@ -614,6 +738,7 @@
                 <div class="tab active" data-tab="node">Node.js</div>
                 <div class="tab" data-tab="curl">cURL</div>
                 <div class="tab" data-tab="python">Python</div>
+                <div class="tab" data-tab="php">PHP</div>
             </div>
             
             <div class="example-container">
@@ -623,103 +748,190 @@
 
 const payload = {
     number: "2547xxxxxxxx",
-    // number: "2547zzzzzzz,2547yyyyyyy,2547wwwwwww",
     message: "Hello from Gifted WhatsApp API!",
     type: "text"
 };
 
-axios.post('https://whatsapp.giftedtech.co.ke/api/sendMessage.php', payload)
-    .then(response => {
-        console.log('Message sent:', response.data);
-    })
-    .catch(error => {
-        console.error('Error:', error.response?.data || error.message);
-    });</code></pre>
+axios.post('https://your-api-domain/api/sendMessage.php', payload)
+    .then(response => console.log('Message sent:', response.data))
+    .catch(error => console.error('Error:', error.response?.data));</code></pre>
                     
-                    <h3>Media Message</h3>
+                    <h3>Signup Verification Code</h3>
                     <pre><code class="language-javascript">const axios = require('axios');
 
 const payload = {
     number: "2547xxxxxxxx",
-    // number: "2547zzzzzzz,2547yyyyyyy,2547wwwwwww",
-    type: "media",
-    mediaUrl: "https://example.com/image.jpg",
-    mediaType: "image/jpeg",
-    filename: "Image.jpg",
-    caption: "Check out this image!"
+    message: "signup",
+    type: "sendSignupCode",
+    username: "John Doe",
+    code: "123456"
 };
 
-axios.post('https://whatsapp.giftedtech.co.ke/api/sendMessage.php', payload)
-    .then(response => {
-        console.log('Media sent:', response.data);
-    })
-    .catch(error => {
-        console.error('Error:', error.response?.data || error.message);
-    });</code></pre>
+axios.post('https://your-api-domain/api/sendMessage.php', payload)
+    .then(response => console.log('Code sent:', response.data))
+    .catch(error => console.error('Error:', error.response?.data));</code></pre>
+
+                    <h3>Password Reset Code</h3>
+                    <pre><code class="language-javascript">const axios = require('axios');
+
+const payload = {
+    number: "2547xxxxxxxx",
+    message: "reset",
+    type: "sendResetCode",
+    username: "John Doe",
+    code: "789012"
+};
+
+axios.post('https://your-api-domain/api/sendMessage.php', payload)
+    .then(response => console.log('Reset code sent:', response.data))
+    .catch(error => console.error('Error:', error.response?.data));</code></pre>
+
+                    <h3>Account Deletion Code</h3>
+                    <pre><code class="language-javascript">const axios = require('axios');
+
+const payload = {
+    number: "2547xxxxxxxx",
+    message: "delete",
+    type: "sendDeleteCode",
+    username: "John Doe",
+    code: "DELETE123"
+};
+
+axios.post('https://your-api-domain/api/sendMessage.php', payload)
+    .then(response => console.log('Delete code sent:', response.data))
+    .catch(error => console.error('Error:', error.response?.data));</code></pre>
                 </div>
                 
                 <div class="tab-content" id="curl">
-                    <h3>Text Message</h3>
+                    <h3>Signup Verification Code</h3>
                     <pre><code class="language-bash">curl -X POST \
-  https://whatsapp.giftedtech.co.ke/api/sendMessage.php \
+  https://your-api-domain/api/sendMessage.php \
   -H 'Content-Type: application/json' \
   -d '{
     "number": "2547xxxxxxxx",
-    "message": "Hello from Gifted Whatsapp Instance API!",
-    "type": "text"
+    "message": "signup",
+    "type": "sendSignupCode",
+    "username": "John Doe",
+    "code": "123456"
 }'</code></pre>
                     
-                    <h3>Media Message</h3>
+                    <h3>Password Reset Code</h3>
                     <pre><code class="language-bash">curl -X POST \
-  https://whatsapp.giftedtech.co.ke/api/sendMessage.php \
+  https://your-api-domain/api/sendMessage.php \
   -H 'Content-Type: application/json' \
   -d '{
     "number": "2547xxxxxxxx",
-    "type": "media",
-    "mediaUrl": "https://example.com/image.jpg",
-    "mediaType": "image/jpeg",
-    "filename": "Image.jpg"
-    "caption": "Image sent via Gifted Whatsapp Instance API"
+    "message": "reset",
+    "type": "sendResetCode",
+    "username": "John Doe",
+    "code": "789012"
+}'</code></pre>
+
+                    <h3>Resend Verification Code</h3>
+                    <pre><code class="language-bash">curl -X POST \
+  https://your-api-domain/api/sendMessage.php \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "number": "2547xxxxxxxx",
+    "message": "resend",
+    "type": "sendResendCode",
+    "username": "John Doe",
+    "code": "654321"
+}'</code></pre>
+
+                    <h3>Account Deletion Code</h3>
+                    <pre><code class="language-bash">curl -X POST \
+  https://your-api-domain/api/sendMessage.php \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "number": "2547xxxxxxxx",
+    "message": "delete",
+    "type": "sendDeleteCode",
+    "username": "John Doe",
+    "code": "DELETE123"
 }'</code></pre>
                 </div>
                 
                 <div class="tab-content" id="python">
-                    <h3>Text Message</h3>
+                    <h3>Signup Verification Code</h3>
                     <pre><code class="language-python">import requests
 
 payload = {
     "number": "2547xxxxxxxx",
-    # "number": "2547xxxxxxxx,2547yyyyyyy,2547wwwwwww",
-    "message": "Hello from Gifted Whatsapp Instance API!",
-    "type": "text"
+    "message": "signup",
+    "type": "sendSignupCode",
+    "username": "John Doe",
+    "code": "123456"
 }
 
 response = requests.post(
-    "https://whatsapp.giftedtech.co.ke/api/sendMessage.php",
+    "https://your-api-domain/api/sendMessage.php",
     json=payload
 )
-
 print(response.json())</code></pre>
                     
-                    <h3>Media Message</h3>
+                    <h3>Password Reset Code</h3>
                     <pre><code class="language-python">import requests
 
 payload = {
     "number": "2547xxxxxxxx",
-    # "number": "2547xxxxxxxx,2547yyyyyyy,2547wwwwwww",
-    "type": "media",
-    "mediaUrl": "https://example.com/video.mp4",
-    "mediaType": "video/mp4",
-    "filename": "Video.mp4",
-    "caption": "Video sent from Gifted Whatsapp Instance API"
+    "message": "reset",
+    "type": "sendResetCode",
+    "username": "John Doe",
+    "code": "789012"
 }
 
 response = requests.post(
-    "https://whatsapp.giftedtech.co.ke/api/sendMessage.php",
+    "https://your-api-domain/api/sendMessage.php",
     json=payload
 )
-
 print(response.json())</code></pre>
+                </div>
+
+                <div class="tab-content" id="php">
+                    <h3>Signup Verification Code</h3>
+                    <pre><code class="language-php">&lt;?php
+$payload = [
+    'number' => '2547xxxxxxxx',
+    'message' => 'signup',
+    'type' => 'sendSignupCode',
+    'username' => 'John Doe',
+    'code' => '123456'
+];
+
+$ch = curl_init('https://your-api-domain/api/sendMessage.php');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+
+$response = curl_exec($ch);
+curl_close($ch);
+
+echo $response;
+?&gt;</code></pre>
+
+                    <h3>Password Reset Code</h3>
+                    <pre><code class="language-php">&lt;?php
+$payload = [
+    'number' => '2547xxxxxxxx',
+    'message' => 'reset',
+    'type' => 'sendResetCode',
+    'username' => 'John Doe',
+    'code' => '789012'
+];
+
+$ch = curl_init('https://your-api-domain/api/sendMessage.php');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+
+$response = curl_exec($ch);
+curl_close($ch);
+
+echo $response;
+?&gt;</code></pre>
                 </div>
             </div>
         </div>
@@ -728,122 +940,36 @@ print(response.json())</code></pre>
             <h2>Response</h2>
             <p>The API returns a JSON response with the following structure:</p>
             
+            <h3>Success Response</h3>
             <div class="response">
                 <pre><code class="language-json">{
-    "status": "success",
-    "result": {
-        "key": {
-            "remoteJid": "2547xxxxxxxx@s.whatsapp.net",
-            "fromMe": true,
-            "id": "3EB0ABCD00000000"
-        },
-        "message": {
-            "conversation": "Hello from Gifted WhatsApp Instance API!"
-        },
-        "messageTimestamp": "1678901234",
-        "status": "PENDING"
-    }
+    "status": 200,
+    "success": "true",
+    "creator": "GiftedTech",
+    "message": "Message Sent Successfully",
+    "results": [
+        {
+            "jid": "2547xxxxxxxx@s.whatsapp.net",
+            "status": "success"
+        }
+    ]
 }</code></pre>
             </div>
             
-            <p>Error responses will have the following structure:</p>
-            
+            <h3>Error Response</h3>
             <div class="response">
                 <pre><code class="language-json">{
-    "status": "error",
-    "error": "Detailed error message"
+    "status": 503,
+    "success": "false",
+    "creator": "GiftedTech",
+    "error": "WhatsApp Instance is Not Ready Yet or Disconnected"
 }</code></pre>
             </div>
-        </div>
-
-        <div class="card">
-            <h2>Test Cases</h2>
-            <p>Here's a complete test script you can use to verify all functionality:</p>
-            
-            <pre><code class="language-javascript">const axios = require('axios');
-const API_BASE_URL = 'https://whatsapp.giftedtech.co.ke';
-
-axios.defaults.headers.common['Content-Type'] = 'application/json';
-
-const testNumber = '2547xxxxxxxx';
-// OR CAN BE
-// const testNumber = '2547xxxxxxxx,2547zzzzzzz,2547yyyyyyyy';
-
-// Test Text Message
-async function testTextMessage() {
-  const payload = {
-    number: testNumber,
-    message: 'Hello, This is a test message',
-    type: 'text'
-  };
-
-  try {
-    const response = await axios.post(`${API_BASE_URL}/api/sendMessage.php`, payload);
-    console.log('✅ Text message sent successfully');
-    return true;
-  } catch (error) {
-    console.error('❌ Text message failed:', error.response?.data || error.message);
-    return false;
-  }
-}
-
-// Test Media Message
-async function testMediaMessage({ mediaUrl, mediaType, filename, caption }) {
-  const payload = {
-    number: testNumber,
-    type: 'media',
-    mediaUrl,
-    mediaType,
-    filename,
-    caption
-  };
-
-  try {
-    const response = await axios.post(`${API_BASE_URL}/api/sendMessage.php`, payload);
-    console.log(`✅ ${mediaType} message sent successfully`);
-    return true;
-  } catch (error) {
-    console.error(`❌ ${mediaType} message failed:`, error.response?.data || error.message);
-    return false;
-  }
-}
-
-async function runTests() {
-  console.log('🚀 Starting tests...');
-
-  const tests = [
-    testTextMessage(),
-    testMediaMessage({
-      mediaUrl: 'https://files.giftedtech.co.ke/audio/fuPaudio.mp3',
-      mediaType: 'audio/mpeg',
-      filename: 'Audio.mp3',
-      caption: '🎵 Audio test'
-    }),
-    testMediaMessage({
-      mediaUrl: 'https://files.giftedtech.co.ke/video/SkZWvideo.mp4',
-      mediaType: 'video/mp4',
-      filename: 'Video.mp4',
-      caption: '🎬 Video test'
-    }),
-    testMediaMessage({
-      mediaUrl: 'https://gitcdn.giftedtech.co.ke/image/AZO_image.jpg',
-      mediaType: 'image/jpeg',
-      filename: 'image.jpg',
-      caption: '🖼️ Image test'
-    })
-  ];
-
-  const results = await Promise.all(tests);
-  console.log('\nTest Summary:');
-  results.forEach((res, i) => console.log(`Test ${i + 1}: ${res ? '✅ PASSED' : '❌ FAILED'}`));
-}
-
-runTests();</code></pre>
         </div>
 
         <footer>
-            <p>© 2025-22026 Gifted Tech. All Rights Reserved.</p>
-            <p>API Version: 1.0.2</p>
+            <p>2025-2026 Gifted Tech. All Rights Reserved.</p>
+            <p>API Version: 1.1.0</p>
         </footer>
     </div>
 
@@ -855,8 +981,12 @@ runTests();</code></pre>
             </div>
             
             <div class="message-type-selector">
-                <div class="message-type-btn active" data-type="text">Text Message</div>
-                <div class="message-type-btn" data-type="media">Media Message</div>
+                <div class="message-type-btn active" data-type="text">Text</div>
+                <div class="message-type-btn" data-type="media">Media</div>
+                <div class="message-type-btn" data-type="sendSignupCode">Signup Code</div>
+                <div class="message-type-btn" data-type="sendResendCode">Resend Code</div>
+                <div class="message-type-btn" data-type="sendResetCode">Reset Code</div>
+                <div class="message-type-btn" data-type="sendDeleteCode">Delete Code</div>
             </div>
             
             <form id="apiForm">
@@ -864,7 +994,7 @@ runTests();</code></pre>
                 
                 <div class="form-group">
                     <label for="number">Phone Number(s) (with country code)</label>
-                    <input type="text" id="number" name="number" class="form-control" value="2547xxxxxxxx" required>
+                    <input type="text" id="number" name="number" class="form-control" placeholder="2547xxxxxxxx" required>
                 </div>
                 
                 <div id="textFields">
@@ -874,25 +1004,39 @@ runTests();</code></pre>
                     </div>
                 </div>
                 
+                <div id="codeFields" style="display: none;">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" class="form-control" placeholder="John Doe" value="Test User">
+                    </div>
+                    <div class="form-group">
+                        <label for="code">Verification Code</label>
+                        <input type="text" id="code" name="code" class="form-control" placeholder="123456" value="">
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn" id="generateCodeBtn" style="background: var(--secondary); color: white;">Generate Random Code</button>
+                    </div>
+                </div>
+                
                 <div id="mediaFields" style="display: none;">
                     <div class="form-group">
                         <label for="mediaUrl">Media URL</label>
-                        <input type="url" id="mediaUrl" name="mediaUrl" class="form-control" value="https://files.giftedtech.co.ke/audio/fuPaudio.mp3" required>
+                        <input type="url" id="mediaUrl" name="mediaUrl" class="form-control" placeholder="https://example.com/image.jpg">
                     </div>
                     
                     <div class="form-group">
-                        <label for="mediaType">Media Type</label>
-                        <input type="text" id="mediaType" name="mediaType" class="form-control" placeholder="e.g., audio/mpeg image/jpeg, video/mp4">
+                        <label for="mediaType">Media Type (optional)</label>
+                        <input type="text" id="mediaType" name="mediaType" class="form-control" placeholder="e.g., image/jpeg, video/mp4">
                     </div>
                     
                     <div class="form-group">
-                        <label for="filename">Filename (with or without extension)</label>
-                        <input type="text" id="filename" name="filename" class="form-control" placeholder="e.g., Audio.mp3, Image.jpg, Video.mp4">
+                        <label for="filename">Filename (optional)</label>
+                        <input type="text" id="filename" name="filename" class="form-control" placeholder="e.g., image.jpg">
                     </div>
                     
                     <div class="form-group">
-                        <label for="caption">Caption</label>
-                        <textarea id="caption" name="caption" class="form-control" rows="3">Accept this File Test</textarea>
+                        <label for="caption">Caption (optional)</label>
+                        <textarea id="caption" name="caption" class="form-control" rows="2" placeholder="Optional caption"></textarea>
                     </div>
                 </div>
                 
@@ -981,10 +1125,22 @@ runTests();</code></pre>
         const messageTypeInput = document.getElementById('messageType');
         const textFields = document.getElementById('textFields');
         const mediaFields = document.getElementById('mediaFields');
+        const codeFields = document.getElementById('codeFields');
         const apiForm = document.getElementById('apiForm');
         const loading = document.getElementById('loading');
         const responseContainer = document.getElementById('responseContainer');
         const responseText = document.getElementById('responseText');
+        const generateCodeBtn = document.getElementById('generateCodeBtn');
+        const codeInput = document.getElementById('code');
+        const messageInput = document.getElementById('message');
+
+        function generateRandomCode(length = 6) {
+            return Math.random().toString().slice(2, 2 + length);
+        }
+
+        generateCodeBtn.addEventListener('click', () => {
+            codeInput.value = generateRandomCode(6);
+        });
 
         playgroundBtn.addEventListener('click', () => {
             playgroundModal.style.display = 'block';
@@ -1003,6 +1159,8 @@ runTests();</code></pre>
             }
         });
 
+        const codeTypes = ['sendSignupCode', 'sendResetCode', 'sendResendCode', 'sendDeleteCode'];
+
         messageTypeBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 messageTypeBtns.forEach(b => b.classList.remove('active'));
@@ -1011,27 +1169,86 @@ runTests();</code></pre>
                 const type = btn.dataset.type;
                 messageTypeInput.value = type;
                 
+                textFields.style.display = 'none';
+                mediaFields.style.display = 'none';
+                codeFields.style.display = 'none';
+                
                 if (type === 'text') {
                     textFields.style.display = 'block';
-                    mediaFields.style.display = 'none';
-                } else {
-                    textFields.style.display = 'none';
+                    messageInput.required = true;
+                } else if (type === 'media') {
                     mediaFields.style.display = 'block';
+                    messageInput.required = false;
+                } else if (codeTypes.includes(type)) {
+                    codeFields.style.display = 'block';
+                    messageInput.required = false;
+                    if (!codeInput.value) {
+                        codeInput.value = generateRandomCode(6);
+                    }
                 }
             });
         });
 
+        async function checkStatus() {
+            try {
+                const response = await fetch('/api/status');
+                const data = await response.json();
+                
+                const statusIndicator = document.getElementById('statusIndicator');
+                const statusDot = document.getElementById('statusDot');
+                const statusText = document.getElementById('statusText');
+                
+                if (data.connected) {
+                    statusIndicator.className = 'status-indicator connected';
+                    statusDot.className = 'status-dot connected';
+                    statusText.textContent = 'Connected';
+                } else {
+                    statusIndicator.className = 'status-indicator disconnected';
+                    statusDot.className = 'status-dot disconnected';
+                    statusText.textContent = data.isConnecting ? 'Connecting...' : 'Disconnected';
+                }
+            } catch (error) {
+                const statusIndicator = document.getElementById('statusIndicator');
+                const statusDot = document.getElementById('statusDot');
+                const statusText = document.getElementById('statusText');
+                statusIndicator.className = 'status-indicator disconnected';
+                statusDot.className = 'status-dot disconnected';
+                statusText.textContent = 'Error';
+            }
+        }
+
+        checkStatus();
+        setInterval(checkStatus, 10000);
+
         apiForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const formData = new FormData(apiForm);
-            const payload = {};
-            formData.forEach((value, key) => {
-                payload[key] = value;
-            });
+            const type = messageTypeInput.value;
+            const payload = {
+                number: document.getElementById('number').value,
+                type: type
+            };
+            
+            if (type === 'text') {
+                payload.message = document.getElementById('message').value;
+            } else if (type === 'media') {
+                payload.message = 'media';
+                payload.mediaUrl = document.getElementById('mediaUrl').value;
+                const mediaType = document.getElementById('mediaType').value;
+                const filename = document.getElementById('filename').value;
+                const caption = document.getElementById('caption').value;
+                if (mediaType) payload.mediaType = mediaType;
+                if (filename) payload.filename = filename;
+                if (caption) payload.caption = caption;
+            } else if (codeTypes.includes(type)) {
+                payload.message = type;
+                payload.username = document.getElementById('username').value;
+                payload.code = document.getElementById('code').value;
+            }
             
             loading.style.display = 'block';
             responseContainer.style.display = 'none';
+            responseContainer.classList.remove('error');
             
             try {
                 const response = await fetch('/api/sendMessage.php', {
@@ -1047,6 +1264,10 @@ runTests();</code></pre>
                 responseText.textContent = JSON.stringify(data, null, 2);
                 responseContainer.style.display = 'block';
                 
+                if (!response.ok || data.success === 'false') {
+                    responseContainer.classList.add('error');
+                }
+                
                 hljs.highlightElement(responseText);
                 
             } catch (error) {
@@ -1055,6 +1276,7 @@ runTests();</code></pre>
                     error: error.message
                 }, null, 2);
                 responseContainer.style.display = 'block';
+                responseContainer.classList.add('error');
                 hljs.highlightElement(responseText);
             } finally {
                 loading.style.display = 'none';
