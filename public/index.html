@@ -9,14 +9,14 @@
     <meta name="author" content="Gifted Tech">
     <meta property="og:title" content="WaSender API - WhatsApp Messaging API">
     <meta property="og:description" content="Powerful WhatsApp Messaging API for Developers. Send text, media, and verification codes through WhatsApp.">
-    <meta property="og:image" content="https://gitcdn.giftedtech.co.ke/image/AZO_image.jpg">
+    <meta property="og:image" content="https://files.giftedtech.co.ke/image/R6uYwasender-api.png">
     <meta property="og:url" content="https://whatsapp.giftedtech.co.ke">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="WaSender API - WhatsApp Messaging API">
     <meta name="twitter:description" content="Powerful WhatsApp Messaging API for Developers.">
-    <meta name="twitter:image" content="https://gitcdn.giftedtech.co.ke/image/AZO_image.jpg">
-    <link rel="icon" type="image/jpeg" href="https://gitcdn.giftedtech.co.ke/image/AZO_image.jpg">
+    <meta name="twitter:image" content="https://files.giftedtech.co.ke/image/R6uYwasender-api.png">
+    <link rel="icon" type="image/jpeg" href="https://files.giftedtech.co.ke/image/R6uYwasender-api.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <style>
@@ -652,7 +652,7 @@
 
     <header class="header">
         <div class="header-left">
-            <img src="https://gitcdn.giftedtech.co.ke/image/AZO_image.jpg" alt="WaSender API" class="logo-img">
+            <img src="https://files.giftedtech.co.ke/image/R6uYwasender-api.png" alt="WaSender API" class="logo-img">
             <span class="logo-text">WASENDER API</span>
         </div>
         <div class="header-right">
@@ -662,14 +662,14 @@
                 <a href="./examples">Examples</a>
             </nav>
             <div class="theme-container">
-                <button class="theme-toggle" id="themeToggle" title="Theme">🌙</button>
+                <button class="theme-toggle" id="themeToggle" onclick="toggleThemeDropdown()" ontouchend="toggleThemeDropdown(); event.preventDefault();" title="Theme">🌙</button>
                 <div class="theme-dropdown" id="themeDropdown">
-                    <div class="theme-option" data-theme="light">☀️ Light</div>
-                    <div class="theme-option active" data-theme="dark">🌙 Dark</div>
-                    <div class="theme-option" data-theme="system">💻 System</div>
+                    <div class="theme-option" onclick="setTheme('light')" ontouchend="setTheme('light'); event.preventDefault();">☀️ Light</div>
+                    <div class="theme-option active" onclick="setTheme('dark')" ontouchend="setTheme('dark'); event.preventDefault();">🌙 Dark</div>
+                    <div class="theme-option" onclick="setTheme('system')" ontouchend="setTheme('system'); event.preventDefault();">💻 System</div>
                 </div>
             </div>
-            <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleSidebar()" ontouchend="toggleSidebar(); event.preventDefault();">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -677,11 +677,11 @@
         </div>
     </header>
 
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()" ontouchend="closeSidebar(); event.preventDefault();"></div>
     <aside class="sidebar" id="sidebar">
-        <button class="sidebar-close" id="sidebarClose">✕</button>
+        <button class="sidebar-close" id="sidebarClose" onclick="closeSidebar()" ontouchend="closeSidebar(); event.preventDefault();">✕</button>
         <div class="sidebar-header">
-            <img src="https://gitcdn.giftedtech.co.ke/image/AZO_image.jpg" alt="WaSender API" class="logo-img">
+            <img src="https://files.giftedtech.co.ke/image/R6uYwasender-api.png" alt="WaSender API" class="logo-img">
             <span class="logo-text">WASENDER API</span>
         </div>
         <nav class="sidebar-nav">
@@ -960,50 +960,6 @@
             setInterval(checkStatus, 10000);
         });
 
-        document.addEventListener('DOMContentLoaded', function() {
-            var themeToggle = document.getElementById('themeToggle');
-            var mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            var sidebarOverlay = document.getElementById('sidebarOverlay');
-            var sidebarClose = document.getElementById('sidebarClose');
-            var themeOptions = document.querySelectorAll('.theme-option');
-
-            if (themeToggle) {
-                themeToggle.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    toggleThemeDropdown();
-                });
-            }
-            
-            if (mobileMenuBtn) {
-                mobileMenuBtn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    toggleSidebar();
-                });
-            }
-            
-            if (sidebarOverlay) {
-                sidebarOverlay.addEventListener('click', function(e) {
-                    closeSidebar();
-                });
-            }
-            
-            if (sidebarClose) {
-                sidebarClose.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    closeSidebar();
-                });
-            }
-            
-            themeOptions.forEach(function(option) {
-                option.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    var themeName = option.getAttribute('data-theme');
-                    if (themeName) {
-                        setTheme(themeName);
-                    }
-                });
-            });
-        });
     </script>
 </body>
 </html>
