@@ -15,7 +15,7 @@ const express = require('express'),
       path = require('path'),
       axios = require('axios'),
       config = require('./config'),
-      { THUMBNAIL: thumbnail,
+      { THUMBNAIL: thumbnailUrl,
         NEWSLETTER_JID: newsletterJid,
         NEWSLETTER_URL: newsletterUrl } = config,
       { loadSession, CustomStore, logger, handleIncomingMessages, saveMessage, handleMediaMessage } = require('./gift');
