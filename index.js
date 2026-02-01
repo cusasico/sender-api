@@ -92,7 +92,7 @@ function handleReconnection() {
 }
 
 function isConnectionReady() {
-    return connectionReady && global.Gifted && global.Gifted.user && global.Gifted.ws?.readyState === 1;
+    return connectionReady && global.Gifted && global.Gifted.user;
 }
 
 async function waitForConnection(timeout = 30000) {
