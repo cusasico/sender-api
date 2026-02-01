@@ -18,7 +18,8 @@ const express = require('express'),
       config = require('./config'),
       { THUMBNAIL: thumbnailUrl,
         NEWSLETTER_JID: newsletterJid,
-        NEWSLETTER_URL: newsletterUrl } = config,
+        NEWSLETTER_URL: newsletterUrl,
+        BOT_FOOTER: botFooter } = config,
       { loadSession, CustomStore, logger, handleIncomingMessages, saveMessage, handleMediaMessage } = require('./gift');
 
 const app = express();
@@ -294,6 +295,7 @@ app.post('/api/sendMessage.php', async (req, res) => {
                     await sendButtons(global.Gifted, jid, {
   title: '',            
   text: `Hello *${username},*\nWe've received a request to resend a new verification code, please copy your verification code.\nThe code will expire in *10 minutes.*\n> *Security Tip:* Never share your verification code with anyone\n`,
+  footer: `> *${botFooter}*`,
   buttons: [ 
     { name: 'cta_copy', 
       buttonParamsJson: JSON.stringify({ 
@@ -314,6 +316,7 @@ app.post('/api/sendMessage.php', async (req, res) => {
                   await sendButtons(global.Gifted, jid, {
   title: '',            
   text: `Hello *${username},*\nWe received a request to permanently delete your account.\nPlease review the following information carefully:\n> *⚠️ Important:*\nThis action will immediately and permanently:\n- Delete all your account data\n- Remove your access to all services\n- Cancel any active subscriptions\n\nThis action cannot be undone\n\nTo confirm this deletion, please copy your verification code.\nThe code will expire in *10 minutes.*\n> *Security Tip:* Never share your verification code with anyone\n`,
+  footer: `> *${botFooter}*`,
   buttons: [ 
     { name: 'cta_copy', 
       buttonParamsJson: JSON.stringify({ 
@@ -333,8 +336,8 @@ app.post('/api/sendMessage.php', async (req, res) => {
                 } else if (type === 'text') {
                   await sendButtons(global.Gifted, jid, {
   title: '',            
-  text: formattedMessage,    
-  footer: message,            
+  text: message,    
+  footer: `> *${botFooter}*`,            
   buttons: [ 
     {
       name: 'cta_url',
