@@ -141,6 +141,7 @@
 
         .theme-container {
             position: relative;
+            z-index: 1002;
         }
 
         .theme-toggle {
@@ -155,9 +156,12 @@
             justify-content: center;
             font-size: 0.9rem;
             transition: all 0.3s;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            user-select: none;
         }
 
-        .theme-toggle:hover {
+        .theme-toggle:hover, .theme-toggle:active {
             transform: scale(1.05);
             box-shadow: var(--shadow);
         }
@@ -195,9 +199,12 @@
             transition: background 0.2s;
             color: var(--text-primary);
             font-size: 0.85rem;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            user-select: none;
         }
 
-        .theme-option:hover {
+        .theme-option:hover, .theme-option:active {
             background: var(--bg-secondary);
         }
 
@@ -218,6 +225,10 @@
             align-items: center;
             justify-content: center;
             gap: 5px;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            user-select: none;
+            z-index: 1002;
         }
 
         .mobile-menu-btn span {
