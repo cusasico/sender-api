@@ -21,6 +21,7 @@
         "file-type": "^20.4.1",
         "gifted-api": "file:",
         "gifted-baileys": "^2.0.5",
+        "gifted-btns": "*",
         "axios": "*",
         "fs": "*",
         "pino": "^8.0.0",
