@@ -22,8 +22,8 @@
         "file-type": "^20.5.0",
         "fs": "*",
         "gifted-api": "file:",
-        "gifted-baileys": "^2.0.5",
-        "gifted-btns": "*",
+        "gifted-baileys": "^2.0.6",
+        "gifted-btns": "^1.0.2",
         "pino": "^8.21.0",
         "qrcode": "^1.5.4",
         "qrcode-terminal": "^0.12.0"
